@@ -9,9 +9,9 @@ const getAllCategories = async (req, res) => {
     }
 };
 
-const getCategoryById = async (req, res) => {
+const getCategoryByUid = async (req, res) => {
     try {
-        const category = await Category.findByPk(req.params.id);
+        const category = await Category.findOne({ where: { uid: req.params.uid } });
         if (!category) {
             return res.status(404).json({ message: "Category not found" });
         }
@@ -32,7 +32,7 @@ const createCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-        const category = await Category.findByPk(req.params.id);
+        const category = await Category.findOne({ where: { uid: req.params.uid } });
         if (!category) {
             return res.status(404).json({ message: "Category not found" });
         }
@@ -46,7 +46,7 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     try {
-        const category = await Category.findByPk(req.params.id);
+        const category = await Category.findOne({ where: { uid: req.params.uid } });
         if (!category) {
             return res.status(404).json({ message: "Category not found" });
         }
@@ -59,7 +59,7 @@ const deleteCategory = async (req, res) => {
 
 module.exports = {
     getAllCategories,
-    getCategoryById,
+    getCategoryByUid,
     createCategory,
     updateCategory,
     deleteCategory,

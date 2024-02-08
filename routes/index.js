@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
     getAllJobs,
-    getJobById,
+    getJobByUid,
     createJob,
     updateJob,
     deleteJob,
@@ -11,7 +11,7 @@ const {
 
 const {
     getAllBlogs,
-    getBlogById,
+    getBlogByUid,
     createBlog,
     updateBlog,
     deleteBlog,
@@ -19,7 +19,7 @@ const {
 
 const {
     getAllCategories,
-    getCategoryById,
+    getCategoryByUid,
     createCategory,
     updateCategory,
     deleteCategory,
@@ -27,7 +27,7 @@ const {
 
 const {
     getAllUsers,
-    getUserById,
+    getUserByUid,
     createUser,
     updateUser,
     deleteUser,
@@ -35,28 +35,28 @@ const {
 
 // Job Routes
 router.get("/jobs", getAllJobs);
-router.get("/jobs/:uid", getJobById);
+router.get("/jobs/:uid", getJobByUid);
 router.post("/jobs", createJob);
 router.put("/jobs/:uid", updateJob);
 router.delete("/jobs/:uid", deleteJob);
 
 // Blog Routes
 router.get("/blogs", getAllBlogs);
-router.get("/blogs/:uid", getBlogById);
+router.get("/blogs/:uid", getBlogByUid);
 router.post("/blogs", createBlog);
 router.put("/blogs/:uid", updateBlog);
 router.delete("/blogs/:uid", deleteBlog);
 
 // Category Routes
 router.get("/categories", getAllCategories);
-router.get("/categories/:uid", getCategoryById);
+router.get("/categories/:uid", getCategoryByUid);
 router.post("/categories", createCategory);
 router.put("/categories/:uid", updateCategory);
 router.delete("/categories/:uid", deleteCategory);
 
 // User Routes
 router.get("/users", getAllUsers);
-router.get("/users/:uid", getUserById);
+router.get("/users/:uid", getUserByUid);
 router.post("/users", createUser);
 router.put("/users/:uid", updateUser);
 router.delete("/users/:uid", deleteUser);

@@ -22,7 +22,7 @@ const getAllJobs = async (req, res) => {
     }
 };
 
-const getJobById = async (req, res) => {
+const getJobByUid = async (req, res) => {
     try {
         const isAdmin = req.user && req.user.is_admin;
         const jobId = req.params.id;
@@ -60,7 +60,7 @@ const createJob = async (req, res) => {
         const job = new Job({
             title: req.body.title,
             description: req.body.description,
-            // Add other fields as necessary
+            is_available: req.body.is_available,
         });
 
         const newJob = await job.save();
@@ -80,7 +80,7 @@ const updateJob = async (req, res) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const job = await Job.findByPk(req.params.id);
+        const job = await Job.findOne({ where: { uid: req.params.uid } });
         if (!job) {
             return res.status(404).json({ message: 'Job not found' });
         }
@@ -132,7 +132,7 @@ const deleteJob = async (req, res) => {
 
 module.exports = {
     getAllJobs,
-    getJobById,
+    getJobByUid,
     createJob,
     updateJob,
     deleteJob,

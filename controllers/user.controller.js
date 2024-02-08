@@ -9,10 +9,10 @@ const getAllJobs = async (req, res) => {
     }
 };
 
-const getJobById = async (req, res) => {
+const getJobByUid = async (req, res) => {
     try {
         // TODO: use config errors
-        const user = await User.findByPk(req.params.id);
+        const user = await User.findOne({ where: { uid: req.params.uid } });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -33,7 +33,7 @@ const createJob = async (req, res) => {
 
 const updateJob = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id);
+        const user = await User.findOne({ where: { uid: req.params.uid } });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -47,7 +47,7 @@ const updateJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id);
+        const user = await User.findOne({ where: { uid: req.params.uid } });
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -60,7 +60,7 @@ const deleteJob = async (req, res) => {
 
 module.exports = {
     getAllJobs,
-    getJobById,
+    getJobByUid,
     createJob,
     updateJob,
     deleteJob,

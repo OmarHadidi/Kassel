@@ -9,9 +9,9 @@ const getAllBlogs = async (req, res) => {
     }
 };
 
-const getBlogById = async (req, res) => {
+const getBlogByUid = async (req, res) => {
     try {
-        const blog = await Blog.findByPk(req.params.id);
+        const blog = await Blog.findOne({ where: { uid: req.params.uid } });
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
@@ -23,8 +23,22 @@ const getBlogById = async (req, res) => {
 
 const createBlog = async (req, res) => {
     try {
-        const blog = await Blog.create(req.body);
-        res.status(201).json(blog);
+        // Check if the user is an admin
+        const isAdmin = req.user && req.user.is_admin;
+
+        // If user is not an admin, return unauthorized
+        if (!isAdmin) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        // Create the blog
+        const blog = new Blog({
+            title: req.body.title,
+            content: req.body.description,
+        });
+
+        const newBlog = await blog.save();
+        res.status(201).json(newBlog);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -32,26 +46,60 @@ const createBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
     try {
-        const blog = await Blog.findByPk(req.params.id);
-        if (!blog) {
-            return res.status(404).json({ message: "Blog not found" });
+        // Check if the user is an admin
+        const isAdmin = req.user && req.user.is_admin;
+
+        // If user is not an admin, return unauthorized
+        if (!isAdmin) {
+            return res.status(401).json({ message: 'Unauthorized' });
         }
 
+        const blog = await Blog.findOne({ where: { uid: req.params.uid } });
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found' });
+        }
+
+        // Update the blog
         await blog.update(req.body);
+
         res.json(blog);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
 
+
 const deleteBlog = async (req, res) => {
     try {
-        const blog = await Blog.findByPk(req.params.id);
-        if (!blog) {
-            return res.status(404).json({ message: "Blog not found" });
+        // Check if the user is an admin
+        const isAdmin = req.user && req.user.is_admin;
+
+        // If user is not an admin, return unauthorized
+        if (!isAdmin) {
+            return res.status(401).json({ message: 'Unauthorized' });
         }
-        await blog.destroy();
-        res.json({ message: "Blog deleted successfully" });
+
+        const blogId = req.params.id;
+        const hardDelete = req.query.permanent === 'true'; // Check if hard delete is requested
+
+        let blog;
+
+        if (hardDelete) {
+            // Perform hard delete
+            blog = await Blog.findByPk(blogId);
+            if (!blog) {
+                return res.status(404).json({ message: 'Blog not found' });
+            }
+            await blog.destroy({force:true});
+            return res.json({ message: 'Blog permanently deleted' });
+        } else {
+            // Perform soft delete
+            const result = await Blog.destroy({ where: { id: blogId } });
+            if (result === 0) {
+                return res.status(404).json({ message: 'Blog not found' });
+            }
+            return res.json({ message: 'Blog deleted' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -59,7 +107,7 @@ const deleteBlog = async (req, res) => {
 
 module.exports = {
     getAllBlogs,
-    getBlogById,
+    getBlogByUid,
     createBlog,
     updateBlog,
     deleteBlog,

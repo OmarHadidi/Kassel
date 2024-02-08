@@ -9,8 +9,8 @@ module.exports = function (sequelize) {
             autoIncrement: true,
         },
         uid: {
-            type: Sequelize.UUID,
-            defaultValue: Sequelize.UUIDV4,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             unique: true,
             allowNull: false
         },

@@ -11,14 +11,15 @@ module.exports = function (sequelize) {
                 autoIncrement: true,
             },
             uid: {
-                type: Sequelize.UUID,
-                defaultValue: Sequelize.UUIDV4,
+                type: DataTypes.UUID,
+                defaultValue: DataTypes.UUIDV4,
                 unique: true,
                 allowNull: false,
             },
             is_admin: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
+                defaultValue: false,
             },
             email: {
                 type: DataTypes.STRING,
@@ -32,7 +33,6 @@ module.exports = function (sequelize) {
                 allowNull: false,
                 unique: { msg: errors.AlreadyExists("username") },
                 validate: {
-                    isAlpha: { msg: errors.AlphaOnly("name") },
                     notEmpty: { msg: errors.Missing("username") },
                 },
             },
@@ -46,8 +46,8 @@ module.exports = function (sequelize) {
             role: {
                 // NOTE
                 type: DataTypes.ENUM("user", "admin", "customerSupport"),
-                defaultValue: "user",
                 allowNull: false,
+                defaultValue: "user",
             },
         },
         { paranoid: true }

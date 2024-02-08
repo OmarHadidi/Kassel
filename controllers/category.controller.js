@@ -1,3 +1,5 @@
+const { log } = require("../config");
+
 const { Category } = require("../config").models;
 
 const getAllCategories = async (req, res) => {
@@ -5,6 +7,7 @@ const getAllCategories = async (req, res) => {
         const categories = await Category.findAll();
         res.json(categories);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -27,6 +30,7 @@ const createCategory = async (req, res) => {
         const newCategory = await category.save();
         res.status(201).json(newCategory);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -51,6 +55,7 @@ const updateCategory = async (req, res) => {
 
         res.json(category);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -74,6 +79,7 @@ const deleteCategory = async (req, res) => {
 
         res.json({ message: 'Category deleted successfully' });
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };

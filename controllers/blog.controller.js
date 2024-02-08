@@ -1,3 +1,5 @@
+const { log } = require("../config");
+
 const { Blog } = require("../config").models;
 
 const getAllBlogs = async (req, res) => {
@@ -5,6 +7,7 @@ const getAllBlogs = async (req, res) => {
         const blogs = await Blog.findAll();
         res.json(blogs);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -17,6 +20,7 @@ const getBlogByUid = async (req, res) => {
         }
         res.json(blog);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -41,6 +45,7 @@ const createBlog = async (req, res) => {
         const newBlog = await blog.save();
         res.status(201).json(newBlog);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -65,6 +70,7 @@ const updateBlog = async (req, res) => {
 
         res.json(blog);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -101,6 +107,7 @@ const deleteBlog = async (req, res) => {
             return res.json({ message: "Blog deleted" });
         }
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };

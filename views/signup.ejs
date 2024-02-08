@@ -8,14 +8,6 @@
 <body>
     <form action="/auth/signup" method="post">
         <div>
-            <label for="name">name: </label>
-            <input type="text" name="name" id="name"
-                <% if (flash.formData && flash.formData[0].name) { %>
-                value="<%= flash.formData[0].name %>"
-                <% } %>
-            >
-        </div>
-        <div>
             <label for="email">email: </label>
             <input type="text" name="email" id="email"
                 <% if (flash.formData && flash.formData[0].email) { %>

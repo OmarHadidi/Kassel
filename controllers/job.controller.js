@@ -1,3 +1,5 @@
+const { log } = require("../config");
+
 const { Job } = require("../config").models;
 
 const getAllJobs = async (req, res) => {
@@ -18,6 +20,7 @@ const getAllJobs = async (req, res) => {
 
         res.json(jobs);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -40,11 +43,10 @@ const getJobByUid = async (req, res) => {
 
         res.json(job);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
-
-const { Job, User } = require('../models');
 
 const createJob = async (req, res) => {
     try {
@@ -66,6 +68,7 @@ const createJob = async (req, res) => {
         const newJob = await job.save();
         res.status(201).json(newJob);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -90,6 +93,7 @@ const updateJob = async (req, res) => {
 
         res.json(job);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -126,6 +130,7 @@ const deleteJob = async (req, res) => {
             return res.json({ message: 'Job deleted' });
         }
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };

@@ -1,5 +1,6 @@
 const { User } = require("../config").models;
 const bcrypt = require("bcrypt");
+const { log } = require("../config");
 
 const getAllUsers = async (req, res) => {
     try {
@@ -12,6 +13,7 @@ const getAllUsers = async (req, res) => {
         const users = await User.findAll();
         res.json(users);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -33,6 +35,7 @@ const getUserByUid = async (req, res) => {
 
         res.json(user);
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -69,6 +72,7 @@ const createUser = async (req, res) => {
 
         res.status(201).json(user);
     } catch (error) {
+        log.error(error);
         res.status(400).json({ message: error.message });
     }
 };
@@ -83,6 +87,7 @@ const createUser = async (req, res) => {
 //         await user.update(req.body);
 //         res.json(user);
 //     } catch (error) {
+// log.error(error);
 //         res.status(400).json({ message: error.message });
 //     }
 // };
@@ -127,6 +132,7 @@ const deleteUser = async (req, res) => {
             return res.json({ message: "User deleted" });
         }
     } catch (error) {
+        log.error(error);
         res.status(500).json({ message: error.message });
     }
 };

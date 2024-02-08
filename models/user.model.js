@@ -1,30 +1,45 @@
 const { Sequelize, DataTypes, Op } = require("sequelize");
 const errors = require("../config/errors");
 
-/**
- * @param {Sequelize} sequelize
- */
 module.exports = function (sequelize) {
     return sequelize.define("User", {
-        name: {
-            type: DataTypes.STRING,
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        is_admin: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
-            validate: {
-                isAlpha: { msg: errors.AlphaOnly("name") },
-                notEmpty: { msg: errors.Missing("name") },
-            },
-            set(name) {
-                const preparedName = name.trim().toLowerCase();
-                this.setDataValue("name", preparedName);
-            },
         },
         email: {
             type: DataTypes.STRING,
-            // allowNull:false,
             unique: { msg: errors.AlreadyExists("email") },
             validate: {
                 isEmail: { msg: errors.NotEmail("email") },
             },
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: { msg: errors.AlreadyExists("username") },
+            validate: {
+                isAlpha: {msg: errors.AlphaOnly("name")},
+                notEmpty: { msg: errors.Missing("username") },
+            },
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: errors.Missing("password") },
+            },
+        },
+        role: {
+            // NOTE
+            type: DataTypes.ENUM("user", "admin", "customerSupport"),
+            defaultValue: "user",
+            allowNull: false,
         },
     });
 };

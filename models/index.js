@@ -28,40 +28,27 @@ function getSpecialFuncs(model) {
  * @returns all models in object
  */
 function setupModels(sequelize) {
-    const Todo = require("./Todo.model")(sequelize),
-        TodoGroup = require("./TodoGroup.model")(sequelize),
-        User_TodoGroup = require("./UserTodoGroup.model")(sequelize),
+    const Job = require("./Job.model")(sequelize),
         User = require("./User.model")(sequelize),
-        Role = require("./Role.model")(sequelize),
-        UserCreds = require("./UserCreds.model")(sequelize);
+        Blog = require("./Blog.model")(sequelize),
+        BlogCategory = require("./BlogCategory.model")(sequelize);
     const models = {
-        Todo,
-        TodoGroup,
-        User_TodoGroup,
+        Job,
+        Blog,
+        BlogCategory,
         User,
-        Role,
-        UserCreds,
     };
 
     // Relations
-    TodoGroup.hasMany(Todo);
-    Todo.belongsTo(TodoGroup);
+    // Define associations
+    User.belongsToMany(Job, { through: "User_Job", as: "appliedJobs" });
+    Job.belongsToMany(User, { through: "User_Job", as: "applyers" });
 
-    TodoGroup.belongsToMany(User, {
-        through: User_TodoGroup,
-    });
-    User.belongsToMany(TodoGroup, {
-        through: User_TodoGroup,
-    });
+    Blog.belongsTo(User, { foreignKey: "author_id", as: "author" });
+    User.hasMany(Blog, { foreignKey: "author_id", as: "authoredBlogs" });
 
-    User.hasMany(Role, { as: "definedRole" });
-    Role.belongsTo(User);
-
-    Role.hasMany(User_TodoGroup);
-    User_TodoGroup.belongsTo(Role);
-
-    User.hasOne(UserCreds);
-    UserCreds.belongsTo(User);
+    Blog.belongsToMany(BlogCategory, { through: "Blog_Category" });
+    BlogCategory.belongsToMany(Blog, { through: "Blog_Category" });
 
     // getSpecialFuncs(User);
 
@@ -75,6 +62,7 @@ function setupModels(sequelize) {
 async function syncModels(sequelize) {
     setupModels(sequelize);
     await sequelize.sync();
+    // await sequelize.sync({force:true});
 }
 
 // To run here

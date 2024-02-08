@@ -28,13 +28,14 @@ const createBlog = async (req, res) => {
 
         // If user is not an admin, return unauthorized
         if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
         // Create the blog
         const blog = new Blog({
             title: req.body.title,
             content: req.body.description,
+            author_id: req.user.id,
         });
 
         const newBlog = await blog.save();
@@ -51,12 +52,12 @@ const updateBlog = async (req, res) => {
 
         // If user is not an admin, return unauthorized
         if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
         const blog = await Blog.findOne({ where: { uid: req.params.uid } });
         if (!blog) {
-            return res.status(404).json({ message: 'Blog not found' });
+            return res.status(404).json({ message: "Blog not found" });
         }
 
         // Update the blog
@@ -68,7 +69,6 @@ const updateBlog = async (req, res) => {
     }
 };
 
-
 const deleteBlog = async (req, res) => {
     try {
         // Check if the user is an admin
@@ -76,11 +76,11 @@ const deleteBlog = async (req, res) => {
 
         // If user is not an admin, return unauthorized
         if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
         const blogId = req.params.id;
-        const hardDelete = req.query.permanent === 'true'; // Check if hard delete is requested
+        const hardDelete = req.query.permanent === "true"; // Check if hard delete is requested
 
         let blog;
 
@@ -88,17 +88,17 @@ const deleteBlog = async (req, res) => {
             // Perform hard delete
             blog = await Blog.findByPk(blogId);
             if (!blog) {
-                return res.status(404).json({ message: 'Blog not found' });
+                return res.status(404).json({ message: "Blog not found" });
             }
-            await blog.destroy({force:true});
-            return res.json({ message: 'Blog permanently deleted' });
+            await blog.destroy({ force: true });
+            return res.json({ message: "Blog permanently deleted" });
         } else {
             // Perform soft delete
             const result = await Blog.destroy({ where: { id: blogId } });
             if (result === 0) {
-                return res.status(404).json({ message: 'Blog not found' });
+                return res.status(404).json({ message: "Blog not found" });
             }
-            return res.json({ message: 'Blog deleted' });
+            return res.json({ message: "Blog deleted" });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });

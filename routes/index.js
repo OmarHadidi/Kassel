@@ -34,25 +34,25 @@ const {
 } = require("../controllers/user.controller");
 
 const {
-  applyUserToJob,
-  withdrawUserFromJob,
-  addCategoryToBlog,
-  removeCategoryFromBlog,
-  // Add other relation controllers as needed
-} = require('../controllers/relations.controller');
+    applyUserToJob,
+    withdrawUserFromJob,
+    addCategoryToBlog,
+    removeCategoryFromBlog,
+} = require("../controllers/relations.controller");
+
+const { upload, log } = require("../config");
 
 // Job-User Relations
-router.post('/job/:jobUid/user/:userUid', applyUserToJob);
-router.post('/user/:userUid/job/:jobUid', applyUserToJob);
-router.delete('/job/:jobUid/user/:userUid', withdrawUserFromJob);
-router.delete('/user/:userUid/job/:jobUid', withdrawUserFromJob);
+router.post("/job/:jobUid/user/:userUid", applyUserToJob);
+router.post("/user/:userUid/job/:jobUid", applyUserToJob);
+router.delete("/job/:jobUid/user/:userUid", withdrawUserFromJob);
+router.delete("/user/:userUid/job/:jobUid", withdrawUserFromJob);
 
 // Blog-Category Relations
-router.post('/blog/:blogUid/category/:categoryUid', addCategoryToBlog);
-router.post('/category/:categoryUid/blog/:blogUid', addCategoryToBlog);
-router.delete('/blog/:blogUid/category/:categoryUid', removeCategoryFromBlog);
-router.delete('/category/:categoryUid/blog/:blogUid', removeCategoryFromBlog);
-
+router.post("/blog/:blogUid/category/:categoryUid", addCategoryToBlog);
+router.post("/category/:categoryUid/blog/:blogUid", addCategoryToBlog);
+router.delete("/blog/:blogUid/category/:categoryUid", removeCategoryFromBlog);
+router.delete("/category/:categoryUid/blog/:blogUid", removeCategoryFromBlog);
 
 // Job Routes
 router.get("/jobs", getAllJobs);
@@ -80,6 +80,11 @@ router.get("/users/:uid", getUserByUid);
 router.post("/users", createUser);
 // router.put("/users/:uid", updateUser);
 router.delete("/users/:uid", deleteUser);
+
+// Upload Images
+router.post("/upload", upload.single("image"), (req, res) => {
+    res.status(200).json({ url: `/uploads/${req.file.filename}` });
+});
 
 /* GET home page. */
 // TODO: Edit this

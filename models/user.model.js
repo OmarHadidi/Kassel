@@ -8,6 +8,12 @@ module.exports = function (sequelize) {
             primaryKey: true,
             autoIncrement: true,
         },
+        uid: {
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            unique: true,
+            allowNull: false,
+        },
         is_admin: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
@@ -24,7 +30,7 @@ module.exports = function (sequelize) {
             allowNull: false,
             unique: { msg: errors.AlreadyExists("username") },
             validate: {
-                isAlpha: {msg: errors.AlphaOnly("name")},
+                isAlpha: { msg: errors.AlphaOnly("name") },
                 notEmpty: { msg: errors.Missing("username") },
             },
         },

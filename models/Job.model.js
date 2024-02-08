@@ -10,6 +10,12 @@ module.exports = function (sequelize) {
                 primaryKey: true,
                 autoIncrement: true,
             },
+            uid: {
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4,
+                unique: true,
+                allowNull: false
+            },
             is_available: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,

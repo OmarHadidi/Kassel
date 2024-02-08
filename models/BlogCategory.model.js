@@ -8,6 +8,12 @@ module.exports = function (sequelize) {
             primaryKey: true,
             autoIncrement: true,
         },
+        uid: {
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            unique: true,
+            allowNull: false
+        },
         title: {
             type: DataTypes.STRING,
             allowNull: false,

@@ -1,4 +1,4 @@
-This Branch Can Be Reused As A Boilerplate, As It Has:
+Boilerplate summary:
 -
 - **local auth** system using `passport.js`
 - **sessions** setup with sequelize (`connect-session-sequelize`)

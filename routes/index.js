@@ -57,7 +57,7 @@ router.delete("/categories/:uid", deleteCategory);
 router.get("/users", getAllUsers);
 router.get("/users/:uid", getUserByUid);
 router.post("/users", createUser);
-router.put("/users/:uid", updateUser);
+// router.put("/users/:uid", updateUser);
 router.delete("/users/:uid", deleteUser);
 
 /* GET home page. */

@@ -49,7 +49,6 @@ router.delete("/blogs/:uid", deleteBlog);
 
 // Category Routes
 router.get("/categories", getAllCategories);
-router.get("/categories/:uid", getCategoryByUid);
 router.post("/categories", createCategory);
 router.put("/categories/:uid", updateCategory);
 router.delete("/categories/:uid", deleteCategory);

@@ -22,8 +22,8 @@ const localStrategy = new LocalStrategy({}, verifyUser);
 const setupPassport = () => {
     passport.use(localStrategy);
     passport.serializeUser((user, done) => {
-        const { UserId } = user;
-        done(null, UserId);
+        const { id } = user;
+        done(null, id);
     });
     passport.deserializeUser(async (id, done) => {
         const user = await User.findByPk(id);

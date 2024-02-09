@@ -1,0 +1,20 @@
+runtime: nodejs
+env: flex
+
+# # Optional: Specifies service scaling settings.
+# automatic_scaling:
+#   min_num_instances: 1
+#   max_num_instances: 10
+#   cool_down_period_sec: 60
+#   cpu_utilization:
+#     target_utilization: 0.6
+
+# # Optional: Specifies environment variables.
+# env_variables:
+#   VARIABLE_NAME: 'variable_value'
+
+# # Optional: Specifies resources like CPU and memory.
+# resources:
+#   cpu: 1
+#   memory_gb: 0.5
+#   disk_size_gb: 10

@@ -29,7 +29,7 @@ function getSpecialFuncs(model) {
  */
 function setupModels(sequelize) {
     const Job = require("./Job.model")(sequelize),
-        User = require("./User.model")(sequelize),
+        User = require("./user.model")(sequelize),
         Blog = require("./Blog.model")(sequelize),
         BlogCategory = require("./BlogCategory.model")(sequelize);
     const models = {

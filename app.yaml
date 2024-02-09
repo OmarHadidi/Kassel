@@ -1,5 +1,5 @@
-runtime: nodejs
-env: flex
+runtime: nodejs18
+# env: flex
 
 # # Optional: Specifies service scaling settings.
 # automatic_scaling:

@@ -51,10 +51,10 @@ router.delete("/job/:jobUid/user/:userUid", withdrawUserFromJob);
 router.delete("/user/:userUid/job/:jobUid", withdrawUserFromJob);
 
 // Blog-Category Relations
-router.post("/blog/:blogUid/category/:categoryUid", addCategoryToBlog);
-router.post("/category/:categoryUid/blog/:blogUid", addCategoryToBlog);
-router.delete("/blog/:blogUid/category/:categoryUid", removeCategoryFromBlog);
-router.delete("/category/:categoryUid/blog/:blogUid", removeCategoryFromBlog);
+router.post("/blog/:blogUid/category/:categoryUid", mw.auth.isAuthenticated(), addCategoryToBlog);
+router.post("/category/:categoryUid/blog/:blogUid", mw.auth.isAuthenticated(), addCategoryToBlog);
+router.delete("/blog/:blogUid/category/:categoryUid", mw.auth.isAuthenticated(), removeCategoryFromBlog);
+router.delete("/category/:categoryUid/blog/:blogUid", mw.auth.isAuthenticated(), removeCategoryFromBlog);
 
 // Job Routes
 router.get("/jobs", getAllJobs);
@@ -72,9 +72,9 @@ router.delete("/blogs/:uid", mw.auth.isAuthenticated(), deleteBlog);
 
 // Category Routes
 router.get("/categories", getAllCategories);
-router.post("/categories", createCategory);
-router.put("/categories/:uid", updateCategory);
-router.delete("/categories/:uid", deleteCategory);
+router.post("/categories", mw.auth.isAuthenticated(), createCategory);
+router.put("/categories/:uid", mw.auth.isAuthenticated(), updateCategory);
+router.delete("/categories/:uid", mw.auth.isAuthenticated(), deleteCategory);
 
 // User Routes
 router.get("/users", mw.auth.isAuthenticated(), getAllUsers);

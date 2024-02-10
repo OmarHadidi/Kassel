@@ -7,6 +7,7 @@ const getAllBlogs = async (req, res) => {
         const blogs = await Blog.findAll({
             attributes: { exclude: ["id", "author_id"] }, // Exclude 'id' and 'author_id' fields
             include: [{ model: User, attributes: ["username"], as: "author" }], // Include User model to get author's username
+            order: [["updatedAt", "DESC"]],
         });
         res.json(blogs);
     } catch (error) {

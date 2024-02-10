@@ -4,7 +4,9 @@ const { Category } = require("../config").models;
 
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await Category.findAll();
+        const categories = await Category.findAll({
+            attributes: { exclude: ["id"] },
+        });
         res.json(categories);
     } catch (error) {
         log.error(error);
@@ -14,21 +16,22 @@ const getAllCategories = async (req, res) => {
 
 const createCategory = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-
         // Create the category
         const category = new Category({
             title: req.body.title,
         });
 
         const newCategory = await category.save();
-        res.status(201).json(newCategory);
+
+        // Construct response object excluding the 'id', 'createdAt', and 'updatedAt' fields
+        const responseCategory = {
+            uid: newCategory.uid,
+            title: newCategory.title,
+            createdAt: newCategory.createdAt,
+            updatedAt: newCategory.updatedAt,
+        };
+
+        res.status(201).json(responseCategory);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -37,23 +40,22 @@ const createCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-
-        const category = await Category.findOne({ where: { uid: req.params.uid } });
+        const category = await Category.findOne({
+            where: { uid: req.params.uid },
+        });
         if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
+            return res.status(404).json({ message: "Category not found" });
         }
 
         // Update the category
         await category.update(req.body);
-
-        res.json(category);
+        const responseCategory = {
+            uid: category.uid,
+            title: category.title,
+            createdAt: category.createdAt,
+            updatedAt: category.updatedAt,
+        };
+        res.json(responseCategory);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -62,28 +64,19 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     try {
-        const isAdmin = req.user && req.user.is_admin;
+        const category = await Category.destroy({
+            where: { uid: req.params.uid },
+        });
 
-        if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
+        if (!category)
+            return res.status(404).json({ message: "Category not found" });
 
-        const categoryUid = req.params.uid;
-        const category = await Category.findOne({ where: { uid: categoryUid } });
-
-        if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
-
-        await category.destroy();
-
-        res.json({ message: 'Category deleted successfully' });
+        res.json({ message: "Category deleted successfully" });
     } catch (error) {
         log.error(error);
         res.status(500).json({ message: error.message });
     }
 };
-
 
 module.exports = {
     getAllCategories,

@@ -56,14 +56,6 @@ const withdrawUserFromJob = async (req, res) => {
 
 const addCategoryToBlog = async (req, res) => {
     try {
-        const isAdmin = req.user && req.user.is_admin;
-
-        if (!isAdmin) {
-            return res
-                .status(401)
-                .json({ message: "Unauthorized to add category to blog" });
-        }
-
         const { blogUid, categoryUid } = req.params;
         const blog = await Blog.findOne({ where: { uid: blogUid } });
         const category = await BlogCategory.findOne({
@@ -86,14 +78,6 @@ const addCategoryToBlog = async (req, res) => {
 
 const removeCategoryFromBlog = async (req, res) => {
     try {
-        const isAdmin = req.user && req.user.is_admin;
-
-        if (!isAdmin) {
-            return res
-                .status(401)
-                .json({ message: "Unauthorized to remove category from blog" });
-        }
-
         const { blogUid, categoryUid } = req.params;
         const blog = await Blog.findOne({ where: { uid: blogUid } });
         const category = await BlogCategory.findOne({

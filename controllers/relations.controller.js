@@ -68,7 +68,7 @@ const addCategoryToBlog = async (req, res) => {
                 .json({ message: "Blog or Category not found" });
         }
 
-        await blog.addBlogCategory(category);
+        await blog.addCategory(category);
         res.json({ message: "Category added to the blog successfully" });
     } catch (error) {
         log.error(error);

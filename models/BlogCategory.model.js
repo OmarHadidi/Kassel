@@ -12,11 +12,12 @@ module.exports = function (sequelize) {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             unique: true,
-            allowNull: false
+            allowNull: false,
         },
         title: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
             validate: {
                 notEmpty: { msg: errors.Missing("category title") },
             },

@@ -1,10 +1,10 @@
 const { log } = require("../config");
 
-const { Category } = require("../config").models;
+const { BlogCategory } = require("../config").models;
 
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await Category.findAll({
+        const categories = await BlogCategory.findAll({
             attributes: { exclude: ["id"] },
         });
         res.json(categories);
@@ -17,7 +17,7 @@ const getAllCategories = async (req, res) => {
 const createCategory = async (req, res) => {
     try {
         // Create the category
-        const category = new Category({
+        const category = new BlogCategory({
             title: req.body.title,
         });
 
@@ -40,11 +40,11 @@ const createCategory = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-        const category = await Category.findOne({
+        const category = await BlogCategory.findOne({
             where: { uid: req.params.uid },
         });
         if (!category) {
-            return res.status(404).json({ message: "Category not found" });
+            return res.status(404).json({ message: "BlogCategory not found" });
         }
 
         // Update the category
@@ -64,14 +64,14 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     try {
-        const category = await Category.destroy({
+        const category = await BlogCategory.destroy({
             where: { uid: req.params.uid },
         });
 
         if (!category)
-            return res.status(404).json({ message: "Category not found" });
+            return res.status(404).json({ message: "BlogCategory not found" });
 
-        res.json({ message: "Category deleted successfully" });
+        res.json({ message: "BlogCategory deleted successfully" });
     } catch (error) {
         log.error(error);
         res.status(500).json({ message: error.message });

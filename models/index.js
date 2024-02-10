@@ -49,8 +49,8 @@ function setupModels(sequelize) {
     Blog.belongsTo(User, { foreignKey: "author_id", as: "author" });
     User.hasMany(Blog, { foreignKey: "author_id", as: "authoredBlogs" });
 
-    Blog.belongsToMany(BlogCategory, { through: "Blog_Categories" });
-    // BlogCategory.belongsToMany(Blog);//, { through: "BlogCategories" });
+    Blog.belongsToMany(BlogCategory, { through: "Blog_Categories", as: "categories" });
+    // BlogCategory.belongsToMany(Blog, { through: "BlogCategories" });
 
     Job.hasMany(JobApplication);
     JobApplication.belongsTo(Job);
@@ -66,8 +66,8 @@ function setupModels(sequelize) {
  */
 async function syncModels(sequelize) {
     setupModels(sequelize);
-    // await sequelize.sync();
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
+    // await sequelize.sync({ force: true });
 }
 
 // To run here

@@ -12,6 +12,9 @@ const getAllBlogs = async (req, res) => {
                     model: BlogCategory,
                     attributes: ["uid", "title"],
                     as: "categories",
+                    through: {
+                        attributes: [],
+                    },
                 },
             ],
             order: [["updatedAt", "DESC"]],
@@ -67,15 +70,16 @@ const createBlog = async (req, res) => {
                         where: { title: category },
                         defaults: { title: category },
                     });
-                    await blog.addBlogCategory(newCategory);
+                    await blog.addCategory(newCategory);
                 })
             );
         }
-        delete blog.id;
-        delete blog.author_id;
-        blog.categories = categories || [];
+        const responseBlog = blog.toJSON();
+        delete responseBlog.id;
+        delete responseBlog.author_id;
+        responseBlog.categories = categories || [];
 
-        res.status(201).json(blog);
+        res.status(201).json(responseBlog);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -101,13 +105,13 @@ const updateBlog = async (req, res) => {
             await Promise.all(
                 categories.map(async (category) => {
                     const [newCategory] = await BlogCategory.findOrCreate({
-                        where: { name: category },
-                        defaults: { name: category },
+                        where: { title: category },
+                        defaults: { title: category },
                     });
                     newCategories.push(newCategory);
                 })
             );
-            await blog.addBlogCategories(newCategories);
+            await blog.addCategories(newCategories);
         }
 
         blog = await Blog.findOne({
@@ -119,6 +123,9 @@ const updateBlog = async (req, res) => {
                     model: BlogCategory,
                     attributes: ["uid", "title"],
                     as: "categories",
+                    through: {
+                        attributes: [],
+                    },
                 },
             ],
         });
@@ -137,7 +144,7 @@ const deleteBlog = async (req, res) => {
             return res.status(404).json({ message: "Blog not found" });
         }
         // Remove associated categories
-        await blog.removeBlogCategories();
+        await blog.removeCategories();
 
         await blog.destroy();
         res.json({ message: "Blog deleted" });

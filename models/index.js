@@ -49,13 +49,13 @@ function setupModels(sequelize) {
     Blog.belongsTo(User, { foreignKey: "author_id", as: "author" });
     User.hasMany(Blog, { foreignKey: "author_id", as: "authoredBlogs" });
 
-    Blog.belongsToMany(BlogCategory, { through: "Blog_Category" });
-    BlogCategory.belongsToMany(Blog, { through: "Blog_Category" });
+    Blog.belongsToMany(BlogCategory, { through: "Blog_Categories" });
+    // BlogCategory.belongsToMany(Blog);//, { through: "BlogCategories" });
 
     Job.hasMany(JobApplication);
     JobApplication.belongsTo(Job);
 
-    // getSpecialFuncs(User);
+    getSpecialFuncs(Blog);
 
     return models;
 }

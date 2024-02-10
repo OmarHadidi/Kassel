@@ -49,10 +49,10 @@ const {
 const { upload, log } = require("../config");
 
 // Job-User Relations
-router.post("/job/:jobUid/user/:userUid", applyUserToJob);
-router.post("/user/:userUid/job/:jobUid", applyUserToJob);
-router.delete("/job/:jobUid/user/:userUid", withdrawUserFromJob);
-router.delete("/user/:userUid/job/:jobUid", withdrawUserFromJob);
+// router.post("/job/:jobUid/user/:userUid", applyUserToJob);
+// router.post("/user/:userUid/job/:jobUid", applyUserToJob);
+// router.delete("/job/:jobUid/user/:userUid", withdrawUserFromJob);
+// router.delete("/user/:userUid/job/:jobUid", withdrawUserFromJob);
 
 // Blog-Category Relations
 router.post(

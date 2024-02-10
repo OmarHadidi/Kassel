@@ -1,14 +1,27 @@
 const { log } = require("../config");
 
-const { Blog, User } = require("../config").models;
+const { Blog, User, BlogCategory } = require("../config").models;
 
 const getAllBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.findAll({
-            attributes: { exclude: ["id", "author_id"] }, // Exclude 'id' and 'author_id' fields
-            include: [{ model: User, attributes: ["username"], as: "author" }], // Include User model to get author's username
+        const blogsWithCategories = await Blog.findAll({
+            attributes: { exclude: ["id", "author_id"] },
+            include: [
+                { model: User, attributes: ["uid", "username"], as: "author" },
+                {
+                    model: BlogCategory,
+                    attributes: ["uid", "title"],
+                    as: "categories",
+                },
+            ],
             order: [["updatedAt", "DESC"]],
         });
+
+        // hide id
+        const blogs = blogsWithCategories.map((blog) => {
+            delete blog.id;
+        });
+
         res.json(blogs);
     } catch (error) {
         log.error(error);
@@ -20,12 +33,20 @@ const getBlogByUid = async (req, res) => {
     try {
         const blog = await Blog.findOne({
             where: { uid: req.params.uid },
-            attributes: { exclude: ["id", "author_id"] }, // Exclude 'id' and 'author_id' fields
-            include: [{ model: User, attributes: ["username"], as: "author" }], // Include User model to get author's username
+            attributes: { exclude: ["id", "author_id"] },
+            include: [
+                { model: User, attributes: ["username", "uid"], as: "author" },
+                {
+                    model: BlogCategory,
+                    attributes: ["title", "uid"],
+                    as: "categories",
+                },
+            ],
         });
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
+
         res.json(blog);
     } catch (error) {
         log.error(error);
@@ -35,25 +56,30 @@ const getBlogByUid = async (req, res) => {
 
 const createBlog = async (req, res) => {
     try {
-        const blog = new Blog({
-            title: req.body.title,
-            content: req.body.description,
+        const { title, content, categories } = req.body;
+
+        const blog = await Blog.create({
+            title,
+            content,
             author_id: req.user.id,
         });
 
-        const newBlog = await blog.save();
+        if (categories && categories.length > 0) {
+            await Promise.all(
+                categories.map(async (category) => {
+                    const [newCategory] = await BlogCategory.findOrCreate({
+                        where: { title: category },
+                        defaults: { title: category },
+                    });
+                    await blog.addBlogCategory(newCategory);
+                })
+            );
+        }
+        delete blog.id;
+        delete blog.author_id;
+        blog.categories = categories || [];
 
-        // Hide 'id' field and replace 'author_id' with 'author' (username)
-        const responseBlog = {
-            uid: newBlog.uid, // Assuming there's a uid field
-            title: newBlog.title,
-            content: newBlog.content,
-            author: req.user.username, // Assuming req.user contains the user object with username
-            createdAt: newBlog.createdAt,
-            updatedAt: newBlog.updatedAt,
-        };
-
-        res.status(201).json(responseBlog);
+        res.status(201).json(blog);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -62,26 +88,44 @@ const createBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
     try {
-        const blog = await Blog.findOne({ where: { uid: req.params.uid } });
+        const { title, content, categories } = req.body;
+
+        let blog = await Blog.findOne({ where: { uid: req.params.uid } });
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
 
-        // Update the blog
-        await blog.update({
-            title: req.body.title,
-            content: req.body.content,
-        });
+        await blog.update({ title, content });
+        // Remove existing categories
+        await blog.removeCategories();
 
-        // Hide 'id' field and replace 'author_id' with 'author' (username)
-        const responseBlog = {
-            uid: blog.uid, // Assuming there's a uid field
-            title: blog.title,
-            content: blog.content,
-            author: req.user.username, // Assuming req.user contains the user object with username
-            createdAt: blog.createdAt,
-            updatedAt: blog.updatedAt,
-        };
+        // Add new categories
+        if (categories && categories.length > 0) {
+            const newCategories = [];
+            await Promise.all(
+                categories.map(async (category) => {
+                    const [newCategory] = await BlogCategory.findOrCreate({
+                        where: { name: category },
+                        defaults: { name: category },
+                    });
+                    newCategories.push(newCategory);
+                })
+            );
+            await blog.addBlogCategories(newCategories);
+        }
+
+        blog = await Blog.findOne({
+            where: { uid: req.params.uid },
+            attributes: { exclude: ["id", "author_id"] },
+            include: [
+                { model: User, attributes: ["username", "uid"], as: "author" },
+                {
+                    model: BlogCategory,
+                    attributes: ["uid", "title"],
+                    as: "categories",
+                },
+            ],
+        });
 
         res.json(blog);
     } catch (error) {
@@ -96,6 +140,9 @@ const deleteBlog = async (req, res) => {
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
+        // Remove associated categories
+        await blog.removeBlogCategories();
+
         await blog.destroy();
         res.json({ message: "Blog deleted" });
     } catch (error) {

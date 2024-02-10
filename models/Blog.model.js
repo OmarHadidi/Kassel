@@ -31,5 +31,8 @@ module.exports = function (sequelize) {
         details: {
             type: DataTypes.TEXT,
         },
+        image: {
+            type: DataTypes.STRING,
+        },
     });
 };

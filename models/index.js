@@ -66,7 +66,7 @@ function setupModels(sequelize) {
  */
 async function syncModels(sequelize) {
     setupModels(sequelize);
-    await sequelize.sync();
+    await sequelize.sync({alter:true});
     // await sequelize.sync({ force: true });
 }
 

@@ -56,11 +56,14 @@ const createBlog = async (req, res) => {
     try {
         const { title, details, categories, description } = req.body;
 
+        const imageUrl = req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
+
         const blog = await Blog.create({
             title,
             details,
             author_id: req.user.id,
             description,
+            image: imageUrl,
         });
 
         if (categories && categories.length > 0) {

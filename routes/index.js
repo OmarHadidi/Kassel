@@ -84,12 +84,21 @@ router.put("/jobs/:uid", mw.auth.isAuthenticated(), updateJob);
 router.delete("/jobs/:uid", mw.auth.isAuthenticated(), deleteJob);
 
 // Job application
-router.post("/job-applications", upload.single("resume"), createJobApplication);
+router.post(
+    "/jobs/:jobUid/applications",
+    upload.single("resume"),
+    createJobApplication
+);
 
 // Blog Routes
 router.get("/blogs", getAllBlogs);
 router.get("/blogs/:uid", getBlogByUid);
-router.post("/blogs", mw.auth.isAuthenticated(), createBlog);
+router.post(
+    "/blogs",
+    mw.auth.isAuthenticated(),
+    upload.single("image"),
+    createBlog
+);
 router.put("/blogs/:uid", mw.auth.isAuthenticated(), updateBlog);
 router.delete("/blogs/:uid", mw.auth.isAuthenticated(), deleteBlog);
 
@@ -107,9 +116,14 @@ router.get("/users/:uid", mw.auth.isAuthenticated(), getUserByUid);
 // router.delete("/users/:uid", mw.auth.isAuthenticated(), deleteUser);
 
 // Upload Images
-router.post("/upload", upload.single("image"), (req, res) => {
-    res.status(200).json({ url: `/uploads/${req.file.filename}` });
-});
+router.post(
+    "/upload",
+    mw.auth.isAuthenticated(),
+    upload.single("image"),
+    (req, res) => {
+        res.status(200).json({ url: `/uploads/${req.file.filename}` });
+    }
+);
 
 /* GET home page. */
 // TODO: Edit this

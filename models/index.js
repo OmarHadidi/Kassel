@@ -52,10 +52,10 @@ function setupModels(sequelize) {
     Blog.belongsToMany(BlogCategory, { through: "Blog_Categories", as: "categories" });
     // BlogCategory.belongsToMany(Blog, { through: "BlogCategories" });
 
-    Job.hasMany(JobApplication);
+    Job.hasMany(JobApplication, { onDelete: 'CASCADE' });
     JobApplication.belongsTo(Job);
 
-    getSpecialFuncs(Blog);
+    getSpecialFuncs(Job);
 
     return models;
 }

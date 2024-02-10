@@ -1,47 +1,60 @@
 const { log } = require("../config");
 const { JobApplication, Job } = require("../config").models;
 
-const createJobApplication = async (req, res) => {
+const getAllJobApplications = async (req, res) => {
     try {
-        log.dump("form data aplication", req.body)
-        // Destructure fields from request body
-        const { firstName, lastName, email, phone, hearAbout, message } =
-            req.body;
-        // Construct the file link using the uploaded file path
-        const resumeLink = req.file ? `/uploads/${req.file.filename}` : null;
-        // Find the Job based on the uid passed in the URL parameter
-        const jobUid = req.params.jobUid; // Assuming jobUid is the parameter for the Job's uid
-        const job = await Job.findOne({ where: { uid: jobUid } });
-        // Create the job application
-        const jobApplication = await JobApplication.create({
-            firstName,
-            lastName,
-            email,
-            phone,
-            hearAbout,
-            message,
-            resume: resumeLink, // Store the resume link
-            JobId: job.id, // Associate with the specified Job
+        const jobApplications = await JobApplication.findAll({
+            include: [{ model: Job, attributes: ["title", "uid"] }],
+            attributes: { exclude: ["id", "JobId"] },
         });
 
-        // Send response with selected fields
-        res.status(201).json({
-            uid: jobApplication.uid,
-            firstName,
-            lastName,
-            email,
-            phone,
-            hearAbout,
-            message,
-            resume: resumeLink,
-            jobUid,
-        });
+        res.status(200).json(jobApplications);
     } catch (error) {
-        log.error(error);
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const getJobApplicationByUid = async (req, res) => {
+    try {
+        const uid = req.params.uid;
+        const jobApplication = await JobApplication.findOne({
+            where: { uid },
+            include: [{ model: Job, attributes: ["title", "uid"] }],
+            attributes: { exclude: ["id", "JobId"] },
+        });
+
+        if (!jobApplication) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+
+        res.status(200).json(jobApplication);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+const deleteJobApplicationByUid = async (req, res) => {
+    try {
+        const uid = req.params.uid;
+        const deletedJobApplication = await JobApplication.destroy({
+            where: { uid },
+        });
+
+        if (!deletedJobApplication) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+
+        res.status(204).send();
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
 
 module.exports = {
-    createJobApplication,
+    getAllJobApplications,
+    getJobApplicationByUid,
+    deleteJobApplicationByUid,
 };

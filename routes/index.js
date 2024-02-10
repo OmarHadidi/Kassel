@@ -12,7 +12,9 @@ const {
 } = require("../controllers/job.controller");
 
 const {
-    createJobApplication,
+    getAllJobApplications,
+    getJobApplicationByUid,
+    deleteJobApplicationByUid,
 } = require("../controllers/jobApplication.controller");
 
 const {
@@ -44,6 +46,8 @@ const {
     withdrawUserFromJob,
     addCategoryToBlog,
     removeCategoryFromBlog,
+    createJobApplicationForJob,
+    getJobApplicationsForJob,
 } = require("../controllers/relations.controller");
 
 const { upload, log } = require("../config");
@@ -83,11 +87,33 @@ router.post("/jobs", mw.auth.isAuthenticated(), createJob);
 router.put("/jobs/:uid", mw.auth.isAuthenticated(), updateJob);
 router.delete("/jobs/:uid", mw.auth.isAuthenticated(), deleteJob);
 
-// Job application
+// Job application Routes
+router.get(
+    "/job-applications",
+    mw.auth.isAuthenticated(),
+    getAllJobApplications
+);
+router.get(
+    "/job-applications/:uid",
+    mw.auth.isAuthenticated(),
+    getJobApplicationByUid
+);
+router.delete(
+    "/job-applications/:uid",
+    mw.auth.isAuthenticated(),
+    deleteJobApplicationByUid
+);
+
+// Job - Job application Routes
 router.post(
     "/jobs/:jobUid/applications",
     upload.single("resume"),
-    createJobApplication
+    createJobApplicationForJob
+);
+router.get(
+    "/jobs/:jobUid/applications",
+    mw.auth.isAuthenticated(),
+    getJobApplicationsForJob
 );
 
 // Blog Routes

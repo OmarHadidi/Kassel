@@ -5,7 +5,7 @@ const { Job } = require("../config").models;
 const getAllJobs = async (req, res) => {
     try {
         // Fetch all jobs (available & unavailable)
-        const jobs = await Job.findAll({ where: query });
+        const jobs = await Job.findAll({ attributes: { exclude: ["id"] } });
 
         res.json(jobs);
     } catch (error) {

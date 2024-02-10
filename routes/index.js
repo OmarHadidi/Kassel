@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const router = express.Router();
 
 const {
@@ -90,6 +91,17 @@ router.post("/upload", upload.single("image"), (req, res) => {
 // TODO: Edit this
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Kassel", user: req.user });
+});
+
+// GET swagger.yaml file
+router.get("/swagger.yaml", (req, res, next) => {
+    // Path to Swagger specification file
+    const swaggerFilePath = path.join(__dirname, "..", "swagger.yaml");
+
+    // Send the file as the response
+    res.sendFile(swaggerFilePath, (err) => {
+        if (err) next(err);
+    });
 });
 
 module.exports = router;

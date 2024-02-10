@@ -1,334 +1,198 @@
-openapi: 3.0.0
+swagger: "2.0"
 info:
-  title: Kassel API
-  description: Documentation for kassel's API
-  version: 1.0.0
-
+  version: "1.0.0"
+  title: "Job and Blog API"
 servers:
-  - url: https://kassel-2.onrender.com
-    description: Kassel server on Render
-
-variables:
-  baseUrl:
-    default: "https://kassel-2.onrender.com"
-
+  - url: "https://kassel-2.onrender.com"
 paths:
-  /job/{jobUid}/user/{userUid}:
-    post:
-      summary: Apply User to Job
-      description: Applies a user to a job.
-      parameters:
-        - in: path
-          name: jobUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the job.
-        - in: path
-          name: userUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the user.
-      responses:
-        '200':
-          description: User successfully applied to the job.
-    delete:
-      summary: Withdraw User from Job
-      description: Withdraws a user from a job.
-      parameters:
-        - in: path
-          name: jobUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the job.
-        - in: path
-          name: userUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the user.
-      responses:
-        '204':
-          description: User successfully withdrawn from the job.
-
-  /blog/{blogUid}/category/{categoryUid}:
-    post:
-      summary: Add category to blog
-      description: Add category to blog
-      parameters:
-        - in: path
-          name: blogUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the blog.
-        - in: path
-          name: categoryUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the category.
-      responses:
-        '200':
-          description: Relationship successfully created.
-    delete:
-      summary: Delete category from blog
-      description: Delete category from blog.
-      parameters:
-        - in: path
-          name: blogUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the blog.
-        - in: path
-          name: categoryUid
-          required: true
-          schema:
-            type: string
-          description: The UID of the category.
-      responses:
-        '204':
-          description: Relationship successfully deleted.
-
-  /jobs:
-    get:
-      summary: Get All Jobs
-      description: Retrieve a list of all jobs.
-      responses:
-        '200':
-          description: A list of jobs.
-    post:
-      summary: Create a Job
-      description: Create a new job.
-      responses:
-        '201':
-          description: Job successfully created.
-  /jobs/{uid}:
-    get:
-      summary: Get Job by UID
-      description: Retrieve a job by its UID.
-      parameters:
-        - in: path
-          name: uid
-          required: true
-          schema:
-            type: string
-          description: The UID of the job.
-      responses:
-        '200':
-          description: The requested job.
-    put:
-      summary: Update Job
-      description: Update an existing job.
-      parameters:
-        - in: path
-          name: uid
-          required: true
-          schema:
-            type: string
-          description: The UID of the job.
-      responses:
-        '200':
-          description: Job successfully updated.
-    delete:
-      summary: Delete Job
-      description: Delete an existing job.
-      parameters:
-        - in: path
-          name: uid
-          required: true
-          schema:
-            type: string
-          description: The UID of the job.
-      responses:
-        '204':
-          description: Job successfully deleted.
-
   /blogs:
     get:
-      summary: Get All Blogs
-      description: Retrieve a list of all blogs.
+      summary: "Get all blogs"
       responses:
-        '200':
-          description: A list of blogs.
+        200:
+          description: "List of blogs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Blog"
     post:
-      summary: Create a Blog
-      description: Create a new blog.
+      summary: "Create a new blog"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "Blog object that needs to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/Blog"
       responses:
-        '201':
-          description: Blog successfully created.
+        200:
+          description: "Blog created successfully"
+        400:
+          description: "Invalid input"
   /blogs/{uid}:
     get:
-      summary: Get Blog by UID
-      description: Retrieve a blog by its UID.
+      summary: "Get a blog by its ID"
       parameters:
-        - in: path
-          name: uid
+        - name: "uid"
+          in: "path"
+          description: "ID of the blog to return"
           required: true
-          schema:
-            type: string
-          description: The UID of the blog.
+          type: "string"
       responses:
-        '200':
-          description: The requested blog.
+        200:
+          description: "Blog details"
+          schema:
+            $ref: "#/definitions/Blog"
+        404:
+          description: "Blog not found"
     put:
-      summary: Update Blog
-      description: Update an existing blog.
+      summary: "Update a blog"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: path
-          name: uid
+        - name: "uid"
+          in: "path"
+          description: "ID of the blog to update"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "Updated blog object"
           required: true
           schema:
-            type: string
-          description: The UID of the blog.
+            $ref: "#/definitions/Blog"
       responses:
-        '200':
-          description: Blog successfully updated.
+        200:
+          description: "Blog updated successfully"
+        400:
+          description: "Invalid input"
+        404:
+          description: "Blog not found"
     delete:
-      summary: Delete Blog
-      description: Delete an existing blog.
+      summary: "Delete a blog"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: path
-          name: uid
+        - name: "uid"
+          in: "path"
+          description: "ID of the blog to delete"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Blog deleted successfully"
+        404:
+          description: "Blog not found"
+  /jobs:
+    get:
+      summary: "Get all jobs"
+      responses:
+        200:
+          description: "List of jobs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Job"
+    post:
+      summary: "Create a new job"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "Job object that needs to be added"
           required: true
           schema:
-            type: string
-          description: The UID of the blog.
+            $ref: "#/definitions/Job"
       responses:
-        '204':
-          description: Blog successfully deleted.
-
-  /categories:
+        200:
+          description: "Job created successfully"
+        400:
+          description: "Invalid input"
+  /jobs/{uid}:
     get:
-      summary: Get All Categories
-      description: Retrieve a list of all categories.
+      summary: "Get a job by its ID"
+      parameters:
+        - name: "uid"
+          in: "path"
+          description: "ID of the job to return"
+          required: true
+          type: "string"
       responses:
-        '200':
-          description: A list of categories.
-    post:
-      summary: Create a Category
-      description: Create a new category.
-      responses:
-        '201':
-          description: Category successfully created.
-  /categories/{uid}:
+        200:
+          description: "Job details"
+          schema:
+            $ref: "#/definitions/Job"
+        404:
+          description: "Job not found"
     put:
-      summary: Update Category
-      description: Update an existing category.
+      summary: "Update a job"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: path
-          name: uid
+        - name: "uid"
+          in: "path"
+          description: "ID of the job to update"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          description: "Updated job object"
           required: true
           schema:
-            type: string
-          description: The UID of the category.
+            $ref: "#/definitions/Job"
       responses:
-        '200':
-          description: Category successfully updated.
+        200:
+          description: "Job updated successfully"
+        400:
+          description: "Invalid input"
+        404:
+          description: "Job not found"
     delete:
-      summary: Delete Category
-      description: Delete an existing category.
+      summary: "Delete a job"
+      security:
+        - bearerAuth: []
       parameters:
-        - in: path
-          name: uid
+        - name: "uid"
+          in: "path"
+          description: "ID of the job to delete"
           required: true
-          schema:
-            type: string
-          description: The UID of the category.
+          type: "string"
       responses:
-        '204':
-          description: Category successfully deleted.
-
-  /users:
-    get:
-      summary: Get All Users
-      description: Retrieve a list of all users.
-      responses:
-        '200':
-          description: A list of users.
-    post:
-      summary: Create a User
-      description: Create a new user.
-      responses:
-        '201':
-          description: User successfully created.
-  /users/{uid}:
-    get:
-      summary: Get User by UID
-      description: Retrieve a user by its UID.
-      parameters:
-        - in: path
-          name: uid
-          required: true
-          schema:
-            type: string
-          description: The UID of the user.
-      responses:
-        '200':
-          description: The requested user.
-    delete:
-      summary: Delete User
-      description: Delete an existing user.
-      parameters:
-        - in: path
-          name: uid
-          required: true
-          schema:
-            type: string
-          description: The UID of the user.
-      responses:
-        '204':
-          description: User successfully deleted.
-
-  /auth/login:
-    get:
-      summary: Get Login Page
-      description: Renders the login page.
-      responses:
-        '200':
-          description: Login page rendered.
-    post:
-      summary: Login User
-      description: Authenticate and log in a user.
-      responses:
-        '200':
-          description: User successfully logged in.
-  /auth/signup:
-    get:
-      summary: Get Signup Page
-      description: Renders the signup page.
-      responses:
-        '200':
-          description: Signup page rendered.
-    post:
-      summary: Signup User
-      description: Create a new user account.
-      responses:
-        '201':
-          description: User account successfully created.
-  /auth/logout:
-    post:
-      summary: Logout User
-      description: Log out the currently authenticated user.
-      responses:
-        '200':
-          description: User successfully logged out.
-
-  /upload:
-    post:
-      summary: Upload Images
-      description: Handles image uploads.
-      responses:
-        '200':
-          description: Image uploaded successfully.
-
-  /:
-    get:
-      summary: Home Page
-      description: Renders the home page.
-      responses:
-        '200':
-          description: Home page rendered.
+        200:
+          description: "Job deleted successfully"
+        404:
+          description: "Job not found"
+definitions:
+  Blog:
+    type: "object"
+    properties:
+      uid:
+        type: "string"
+        description: "Unique identifier for the blog"
+      title:
+        type: "string"
+        description: "Title of the blog"
+      content:
+        type: "string"
+        description: "Content of the blog"
+      author:
+        type: "string"
+        description: "Author of the blog"
+  Job:
+    type: "object"
+    properties:
+      uid:
+        type: "string"
+        description: "Unique identifier for the job"
+      title:
+        type: "string"
+        description: "Title of the job"
+      description:
+        type: "string"
+        description: "Description of the job"
+      location:
+        type: "string"
+        description: "Location of the job"

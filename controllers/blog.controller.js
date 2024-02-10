@@ -17,12 +17,7 @@ const getAllBlogs = async (req, res) => {
             order: [["updatedAt", "DESC"]],
         });
 
-        // hide id
-        const blogs = blogsWithCategories.map((blog) => {
-            delete blog.id;
-        });
-
-        res.json(blogs);
+        res.json(blogsWithCategories);
     } catch (error) {
         log.error(error);
         res.status(500).json({ message: error.message });
@@ -56,12 +51,13 @@ const getBlogByUid = async (req, res) => {
 
 const createBlog = async (req, res) => {
     try {
-        const { title, content, categories } = req.body;
+        const { title, details, categories, description } = req.body;
 
         const blog = await Blog.create({
             title,
-            content,
+            details,
             author_id: req.user.id,
+            description,
         });
 
         if (categories && categories.length > 0) {
@@ -88,14 +84,14 @@ const createBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
     try {
-        const { title, content, categories } = req.body;
+        const { title, details, description, categories } = req.body;
 
         let blog = await Blog.findOne({ where: { uid: req.params.uid } });
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
 
-        await blog.update({ title, content });
+        await blog.update({ title, details, description });
         // Remove existing categories
         await blog.removeCategories();
 

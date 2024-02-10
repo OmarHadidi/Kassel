@@ -12,7 +12,7 @@ module.exports = function (sequelize) {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             unique: true,
-            allowNull: false
+            allowNull: false,
         },
         title: {
             type: DataTypes.STRING,
@@ -21,13 +21,15 @@ module.exports = function (sequelize) {
                 notEmpty: { msg: errors.Missing("blog title") },
             },
         },
-        content: {
+        description: {
             type: DataTypes.TEXT,
             allowNull: false,
             validate: {
-                notEmpty: { msg: errors.Missing("blog content") },
+                notEmpty: { msg: errors.Missing("blog description") },
             },
         },
-    }
-    );
+        details: {
+            type: DataTypes.TEXT,
+        },
+    });
 };

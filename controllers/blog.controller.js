@@ -1,6 +1,7 @@
 const { log } = require("../config");
-
 const { Blog, User, BlogCategory } = require("../config").models;
+const path = require("path");
+const fs = require("fs");
 
 const getAllBlogs = async (req, res) => {
     try {
@@ -56,7 +57,7 @@ const createBlog = async (req, res) => {
     try {
         const { title, details, categories, description } = req.body;
 
-        const imageUrl = req.protocol + '://' + req.get('host') + '/uploads/' + req.file.filename;
+        const imageUrl = "/uploads/" + req.file.filename;
 
         const blog = await Blog.create({
             title,
@@ -146,10 +147,22 @@ const deleteBlog = async (req, res) => {
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
+        // Remove image
+        if (blog.image) {
+            const filePath = path.join(__dirname, "../public", blog.image);
+            log.system(filePath);
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    log.error(err);
+                    return;
+                }
+            });
+        }
         // Remove associated categories
         await blog.removeCategories();
 
         await blog.destroy();
+
         res.json({ message: "Blog deleted" });
     } catch (error) {
         log.error(error);

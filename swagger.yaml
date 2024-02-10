@@ -1,8 +1,16 @@
 openapi: 3.0.0
 info:
-  title: Your App API
-  description: Documentation for your app's API
+  title: Kassel API
+  description: Documentation for kassel's API
   version: 1.0.0
+
+servers:
+  - url: https://kassel-2.onrender.com
+    description: Kassel server on Render
+
+variables:
+  baseUrl:
+    default: "https://kassel-2.onrender.com"
 
 paths:
   /job/{jobUid}/user/{userUid}:

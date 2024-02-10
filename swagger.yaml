@@ -1,0 +1,326 @@
+openapi: 3.0.0
+info:
+  title: Your App API
+  description: Documentation for your app's API
+  version: 1.0.0
+
+paths:
+  /job/{jobUid}/user/{userUid}:
+    post:
+      summary: Apply User to Job
+      description: Applies a user to a job.
+      parameters:
+        - in: path
+          name: jobUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the job.
+        - in: path
+          name: userUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the user.
+      responses:
+        '200':
+          description: User successfully applied to the job.
+    delete:
+      summary: Withdraw User from Job
+      description: Withdraws a user from a job.
+      parameters:
+        - in: path
+          name: jobUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the job.
+        - in: path
+          name: userUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the user.
+      responses:
+        '204':
+          description: User successfully withdrawn from the job.
+
+  /blog/{blogUid}/category/{categoryUid}:
+    post:
+      summary: Blog-Category Relations
+      description: Manages relationships between blogs and categories.
+      parameters:
+        - in: path
+          name: blogUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the blog.
+        - in: path
+          name: categoryUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the category.
+      responses:
+        '200':
+          description: Relationship successfully created.
+    delete:
+      summary: Blog-Category Relations
+      description: Manages relationships between blogs and categories.
+      parameters:
+        - in: path
+          name: blogUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the blog.
+        - in: path
+          name: categoryUid
+          required: true
+          schema:
+            type: string
+          description: The UID of the category.
+      responses:
+        '204':
+          description: Relationship successfully deleted.
+
+  /jobs:
+    get:
+      summary: Get All Jobs
+      description: Retrieve a list of all jobs.
+      responses:
+        '200':
+          description: A list of jobs.
+    post:
+      summary: Create a Job
+      description: Create a new job.
+      responses:
+        '201':
+          description: Job successfully created.
+  /jobs/{uid}:
+    get:
+      summary: Get Job by UID
+      description: Retrieve a job by its UID.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the job.
+      responses:
+        '200':
+          description: The requested job.
+    put:
+      summary: Update Job
+      description: Update an existing job.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the job.
+      responses:
+        '200':
+          description: Job successfully updated.
+    delete:
+      summary: Delete Job
+      description: Delete an existing job.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the job.
+      responses:
+        '204':
+          description: Job successfully deleted.
+
+  /blogs:
+    get:
+      summary: Get All Blogs
+      description: Retrieve a list of all blogs.
+      responses:
+        '200':
+          description: A list of blogs.
+    post:
+      summary: Create a Blog
+      description: Create a new blog.
+      responses:
+        '201':
+          description: Blog successfully created.
+  /blogs/{uid}:
+    get:
+      summary: Get Blog by UID
+      description: Retrieve a blog by its UID.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the blog.
+      responses:
+        '200':
+          description: The requested blog.
+    put:
+      summary: Update Blog
+      description: Update an existing blog.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the blog.
+      responses:
+        '200':
+          description: Blog successfully updated.
+    delete:
+      summary: Delete Blog
+      description: Delete an existing blog.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the blog.
+      responses:
+        '204':
+          description: Blog successfully deleted.
+
+  /categories:
+    get:
+      summary: Get All Categories
+      description: Retrieve a list of all categories.
+      responses:
+        '200':
+          description: A list of categories.
+    post:
+      summary: Create a Category
+      description: Create a new category.
+      responses:
+        '201':
+          description: Category successfully created.
+  /categories/{uid}:
+    put:
+      summary: Update Category
+      description: Update an existing category.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the category.
+      responses:
+        '200':
+          description: Category successfully updated.
+    delete:
+      summary: Delete Category
+      description: Delete an existing category.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the category.
+      responses:
+        '204':
+          description: Category successfully deleted.
+
+  /users:
+    get:
+      summary: Get All Users
+      description: Retrieve a list of all users.
+      responses:
+        '200':
+          description: A list of users.
+    post:
+      summary: Create a User
+      description: Create a new user.
+      responses:
+        '201':
+          description: User successfully created.
+  /users/{uid}:
+    get:
+      summary: Get User by UID
+      description: Retrieve a user by its UID.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the user.
+      responses:
+        '200':
+          description: The requested user.
+    delete:
+      summary: Delete User
+      description: Delete an existing user.
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: The UID of the user.
+      responses:
+        '204':
+          description: User successfully deleted.
+
+  /auth/login:
+    get:
+      summary: Get Login Page
+      description: Renders the login page.
+      responses:
+        '200':
+          description: Login page rendered.
+    post:
+      summary: Login User
+      description: Authenticate and log in a user.
+      responses:
+        '200':
+          description: User successfully logged in.
+  /auth/signup:
+    get:
+      summary: Get Signup Page
+      description: Renders the signup page.
+      responses:
+        '200':
+          description: Signup page rendered.
+    post:
+      summary: Signup User
+      description: Create a new user account.
+      responses:
+        '201':
+          description: User account successfully created.
+  /auth/logout:
+    post:
+      summary: Logout User
+      description: Log out the currently authenticated user.
+      responses:
+        '200':
+          description: User successfully logged out.
+
+  /upload:
+    post:
+      summary: Upload Images
+      description: Handles image uploads.
+      responses:
+        '200':
+          description: Image uploaded successfully.
+
+  /:
+    get:
+      summary: Home Page
+      description: Renders the home page.
+      responses:
+        '200':
+          description: Home page rendered.

@@ -1,10 +1,13 @@
 const { log } = require("../config");
 
-const { Blog } = require("../config").models;
+const { Blog, User } = require("../config").models;
 
 const getAllBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.findAll();
+        const blogs = await Blog.findAll({
+            attributes: { exclude: ["id", "author_id"] }, // Exclude 'id' and 'author_id' fields
+            include: [{ model: User, attributes: ["username"], as: "author" }], // Include User model to get author's username
+        });
         res.json(blogs);
     } catch (error) {
         log.error(error);
@@ -14,7 +17,11 @@ const getAllBlogs = async (req, res) => {
 
 const getBlogByUid = async (req, res) => {
     try {
-        const blog = await Blog.findOne({ where: { uid: req.params.uid } });
+        const blog = await Blog.findOne({
+            where: { uid: req.params.uid },
+            attributes: { exclude: ["id", "author_id"] }, // Exclude 'id' and 'author_id' fields
+            include: [{ model: User, attributes: ["username"], as: "author" }], // Include User model to get author's username
+        });
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
@@ -43,7 +50,18 @@ const createBlog = async (req, res) => {
         });
 
         const newBlog = await blog.save();
-        res.status(201).json(newBlog);
+
+        // Hide 'id' field and replace 'author_id' with 'author' (username)
+        const responseBlog = {
+            uid: newBlog.uid, // Assuming there's a uid field
+            title: newBlog.title,
+            content: newBlog.content,
+            author: req.user.username, // Assuming req.user contains the user object with username
+            createdAt: newBlog.createdAt,
+            updatedAt: newBlog.updatedAt,
+        };
+
+        res.status(201).json(responseBlog);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -52,21 +70,26 @@ const createBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
-
         const blog = await Blog.findOne({ where: { uid: req.params.uid } });
         if (!blog) {
             return res.status(404).json({ message: "Blog not found" });
         }
 
         // Update the blog
-        await blog.update(req.body);
+        await blog.update({
+            title: req.body.title,
+            content: req.body.content,
+        });
+
+        // Hide 'id' field and replace 'author_id' with 'author' (username)
+        const responseBlog = {
+            uid: blog.uid, // Assuming there's a uid field
+            title: blog.title,
+            content: blog.content,
+            author: req.user.username, // Assuming req.user contains the user object with username
+            createdAt: blog.createdAt,
+            updatedAt: blog.updatedAt,
+        };
 
         res.json(blog);
     } catch (error) {
@@ -77,35 +100,12 @@ const updateBlog = async (req, res) => {
 
 const deleteBlog = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: "Unauthorized" });
+        const blog = await Blog.findOne({ where: { uid: req.params.uid } });
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found" });
         }
-
-        const blogId = req.params.id;
-        const hardDelete = req.query.permanent === "true"; // Check if hard delete is requested
-
-        let blog;
-
-        if (hardDelete) {
-            // Perform hard delete
-            blog = await Blog.findByPk(blogId);
-            if (!blog) {
-                return res.status(404).json({ message: "Blog not found" });
-            }
-            await blog.destroy({ force: true });
-            return res.json({ message: "Blog permanently deleted" });
-        } else {
-            // Perform soft delete
-            const result = await Blog.destroy({ where: { id: blogId } });
-            if (result === 0) {
-                return res.status(404).json({ message: "Blog not found" });
-            }
-            return res.json({ message: "Blog deleted" });
-        }
+        await blog.destroy();
+        res.json({ message: "Blog deleted" });
     } catch (error) {
         log.error(error);
         res.status(500).json({ message: error.message });

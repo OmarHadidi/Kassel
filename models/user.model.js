@@ -49,7 +49,6 @@ module.exports = function (sequelize) {
                 allowNull: false,
                 defaultValue: "user",
             },
-        },
-        { paranoid: true }
+        }
     );
 };

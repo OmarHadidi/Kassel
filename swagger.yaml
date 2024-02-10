@@ -55,8 +55,8 @@ paths:
 
   /blog/{blogUid}/category/{categoryUid}:
     post:
-      summary: Blog-Category Relations
-      description: Manages relationships between blogs and categories.
+      summary: Add category to blog
+      description: Add category to blog
       parameters:
         - in: path
           name: blogUid
@@ -74,8 +74,8 @@ paths:
         '200':
           description: Relationship successfully created.
     delete:
-      summary: Blog-Category Relations
-      description: Manages relationships between blogs and categories.
+      summary: Delete category from blog
+      description: Delete category from blog.
       parameters:
         - in: path
           name: blogUid

@@ -4,18 +4,7 @@ const { Job } = require("../config").models;
 
 const getAllJobs = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // Define base query
-        let query = { is_available: true };
-
-        // If user is admin, show all jobs
-        if (isAdmin) {
-            query = {};
-        }
-
-        // Fetch jobs based on the query
+        // Fetch all jobs (available & unavailable)
         const jobs = await Job.findAll({ where: query });
 
         res.json(jobs);
@@ -27,18 +16,13 @@ const getAllJobs = async (req, res) => {
 
 const getJobByUid = async (req, res) => {
     try {
-        const isAdmin = req.user && req.user.is_admin;
-        const jobId = req.params.id;
-
-        let job;
-        if (isAdmin) {
-            job = await Job.findByPk(jobId);
-        } else {
-            job = await Job.findOne({ where: { id: jobId, is_available: true } });
-        }
+        const job = await Job.findOne({
+            where: { uid: req.params.uid },
+            attributes: { exclude: ["id"] },
+        });
 
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.status(404).json({ message: "Job not found" });
         }
 
         res.json(job);
@@ -50,23 +34,23 @@ const getJobByUid = async (req, res) => {
 
 const createJob = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-
-        // Create the job
         const job = new Job({
             title: req.body.title,
             description: req.body.description,
-            is_available: req.body.is_available,
         });
 
         const newJob = await job.save();
-        res.status(201).json(newJob);
+
+        // Construct response object excluding the 'id' field
+        const responseJob = {
+            uid: newJob.uid,
+            title: newJob.title,
+            description: newJob.description,
+            createdAt: newJob.createdAt,
+            updatedAt: newJob.updatedAt,
+        };
+
+        res.status(201).json(responseJob);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -75,23 +59,25 @@ const createJob = async (req, res) => {
 
 const updateJob = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-
         const job = await Job.findOne({ where: { uid: req.params.uid } });
         if (!job) {
-            return res.status(404).json({ message: 'Job not found' });
+            return res.status(404).json({ message: "Job not found" });
         }
 
-        // Update the job
-        await job.update(req.body);
+        // Exclude 'id', 'uid', 'createdAt', and 'updatedAt' fields from update
+        const updatedJob = await job.update({
+            title: req.body.title,
+            description: req.body.description,
+        });
+        const responseJob = {
+            uid: updatedJob.uid,
+            title: updatedJob.title,
+            description: updatedJob.description,
+            createdAt: updatedJob.createdAt,
+            updatedAt: updatedJob.updatedAt,
+        };
 
-        res.json(job);
+        res.json(responseJob);
     } catch (error) {
         log.error(error);
         res.status(400).json({ message: error.message });
@@ -100,35 +86,12 @@ const updateJob = async (req, res) => {
 
 const deleteJob = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: 'Unauthorized' });
+        const job = await Job.findOne({ where: { uid: req.params.uid } });
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
         }
-
-        const jobId = req.params.id;
-        const hardDelete = req.query.permanent === 'true'; // Check if hard delete is requested
-
-        let job;
-
-        if (hardDelete) {
-            // Perform hard delete
-            job = await Job.findByPk(jobId);
-            if (!job) {
-                return res.status(404).json({ message: 'Job not found' });
-            }
-            await job.destroy({force:true});
-            return res.json({ message: 'Job permanently deleted' });
-        } else {
-            // Perform soft delete
-            const result = await Job.destroy({ where: { id: jobId } });
-            if (result === 0) {
-                return res.status(404).json({ message: 'Job not found' });
-            }
-            return res.json({ message: 'Job deleted' });
-        }
+        await job.destroy();
+        return res.json({ message: "Job deleted" });
     } catch (error) {
         log.error(error);
         res.status(500).json({ message: error.message });

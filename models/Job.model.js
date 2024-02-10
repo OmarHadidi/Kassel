@@ -16,11 +16,6 @@ module.exports = function (sequelize) {
                 unique: true,
                 allowNull: false,
             },
-            is_available: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: true,
-            },
             title: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -35,7 +30,6 @@ module.exports = function (sequelize) {
                     notEmpty: { msg: errors.Missing("job description") },
                 },
             },
-        },
-        { paranoid: true }
+        }
     );
 };

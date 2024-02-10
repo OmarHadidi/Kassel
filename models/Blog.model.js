@@ -28,7 +28,6 @@ module.exports = function (sequelize) {
                 notEmpty: { msg: errors.Missing("blog content") },
             },
         },
-    },
-    { paranoid: true }
+    }
     );
 };

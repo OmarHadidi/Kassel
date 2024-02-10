@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const mw = require('../middlewares');
 const router = express.Router();
 
 const {
@@ -58,16 +59,16 @@ router.delete("/category/:categoryUid/blog/:blogUid", removeCategoryFromBlog);
 // Job Routes
 router.get("/jobs", getAllJobs);
 router.get("/jobs/:uid", getJobByUid);
-router.post("/jobs", createJob);
-router.put("/jobs/:uid", updateJob);
-router.delete("/jobs/:uid", deleteJob);
+router.post("/jobs", mw.auth.isAuthenticated(), createJob);
+router.put("/jobs/:uid", mw.auth.isAuthenticated(), updateJob);
+router.delete("/jobs/:uid", mw.auth.isAuthenticated(), deleteJob);
 
 // Blog Routes
 router.get("/blogs", getAllBlogs);
 router.get("/blogs/:uid", getBlogByUid);
-router.post("/blogs", createBlog);
-router.put("/blogs/:uid", updateBlog);
-router.delete("/blogs/:uid", deleteBlog);
+router.post("/blogs", mw.auth.isAuthenticated(), createBlog);
+router.put("/blogs/:uid", mw.auth.isAuthenticated(), updateBlog);
+router.delete("/blogs/:uid", mw.auth.isAuthenticated(), deleteBlog);
 
 // Category Routes
 router.get("/categories", getAllCategories);

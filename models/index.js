@@ -31,12 +31,14 @@ function setupModels(sequelize) {
     const Job = require("./Job.model")(sequelize),
         User = require("./user.model")(sequelize),
         Blog = require("./Blog.model")(sequelize),
-        BlogCategory = require("./BlogCategory.model")(sequelize);
+        BlogCategory = require("./BlogCategory.model")(sequelize),
+        JobApplication = require("./JobApplication.model")(sequelize);
     const models = {
         Job,
         Blog,
         BlogCategory,
         User,
+        JobApplication,
     };
 
     // Relations
@@ -50,6 +52,9 @@ function setupModels(sequelize) {
     Blog.belongsToMany(BlogCategory, { through: "Blog_Category" });
     BlogCategory.belongsToMany(Blog, { through: "Blog_Category" });
 
+    Job.hasMany(JobApplication);
+    JobApplication.belongsTo(Job);
+
     // getSpecialFuncs(User);
 
     return models;
@@ -62,7 +67,7 @@ function setupModels(sequelize) {
 async function syncModels(sequelize) {
     setupModels(sequelize);
     // await sequelize.sync();
-    await sequelize.sync({force:true});
+    await sequelize.sync({ force: true });
 }
 
 // To run here

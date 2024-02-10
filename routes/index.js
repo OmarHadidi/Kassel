@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const mw = require('../middlewares');
+const mw = require("../middlewares");
 const router = express.Router();
 
 const {
@@ -10,6 +10,10 @@ const {
     updateJob,
     deleteJob,
 } = require("../controllers/job.controller");
+
+const {
+    createJobApplication,
+} = require("../controllers/jobApplication.controller");
 
 const {
     getAllBlogs,
@@ -51,10 +55,26 @@ router.delete("/job/:jobUid/user/:userUid", withdrawUserFromJob);
 router.delete("/user/:userUid/job/:jobUid", withdrawUserFromJob);
 
 // Blog-Category Relations
-router.post("/blog/:blogUid/category/:categoryUid", mw.auth.isAuthenticated(), addCategoryToBlog);
-router.post("/category/:categoryUid/blog/:blogUid", mw.auth.isAuthenticated(), addCategoryToBlog);
-router.delete("/blog/:blogUid/category/:categoryUid", mw.auth.isAuthenticated(), removeCategoryFromBlog);
-router.delete("/category/:categoryUid/blog/:blogUid", mw.auth.isAuthenticated(), removeCategoryFromBlog);
+router.post(
+    "/blog/:blogUid/category/:categoryUid",
+    mw.auth.isAuthenticated(),
+    addCategoryToBlog
+);
+router.post(
+    "/category/:categoryUid/blog/:blogUid",
+    mw.auth.isAuthenticated(),
+    addCategoryToBlog
+);
+router.delete(
+    "/blog/:blogUid/category/:categoryUid",
+    mw.auth.isAuthenticated(),
+    removeCategoryFromBlog
+);
+router.delete(
+    "/category/:categoryUid/blog/:blogUid",
+    mw.auth.isAuthenticated(),
+    removeCategoryFromBlog
+);
 
 // Job Routes
 router.get("/jobs", getAllJobs);
@@ -62,6 +82,9 @@ router.get("/jobs/:uid", getJobByUid);
 router.post("/jobs", mw.auth.isAuthenticated(), createJob);
 router.put("/jobs/:uid", mw.auth.isAuthenticated(), updateJob);
 router.delete("/jobs/:uid", mw.auth.isAuthenticated(), deleteJob);
+
+// Job application
+router.post("/job-applications", upload.single("resume"), createJobApplication);
 
 // Blog Routes
 router.get("/blogs", getAllBlogs);

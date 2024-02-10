@@ -77,11 +77,11 @@ router.put("/categories/:uid", updateCategory);
 router.delete("/categories/:uid", deleteCategory);
 
 // User Routes
-router.get("/users", getAllUsers);
-router.get("/users/:uid", getUserByUid);
-router.post("/users", createUser);
+router.get("/users", mw.auth.isAuthenticated(), getAllUsers);
+router.get("/users/:uid", mw.auth.isAuthenticated(), getUserByUid);
+// router.post("/users", mw.auth.isAuthenticated(), createUser);
 // router.put("/users/:uid", updateUser);
-router.delete("/users/:uid", deleteUser);
+// router.delete("/users/:uid", mw.auth.isAuthenticated(), deleteUser);
 
 // Upload Images
 router.post("/upload", upload.single("image"), (req, res) => {

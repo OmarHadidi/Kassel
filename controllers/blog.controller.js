@@ -34,15 +34,6 @@ const getBlogByUid = async (req, res) => {
 
 const createBlog = async (req, res) => {
     try {
-        // Check if the user is an admin
-        const isAdmin = req.user && req.user.is_admin;
-
-        // If user is not an admin, return unauthorized
-        if (!isAdmin) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
-
-        // Create the blog
         const blog = new Blog({
             title: req.body.title,
             content: req.body.description,

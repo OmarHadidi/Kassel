@@ -16,11 +16,6 @@ module.exports = function (sequelize) {
                 unique: true,
                 allowNull: false,
             },
-            is_admin: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: false,
-            },
             email: {
                 type: DataTypes.STRING,
                 unique: { msg: errors.AlreadyExists("email") },
@@ -42,12 +37,6 @@ module.exports = function (sequelize) {
                 validate: {
                     notEmpty: { msg: errors.Missing("password") },
                 },
-            },
-            role: {
-                // NOTE
-                type: DataTypes.ENUM("user", "admin", "customerSupport"),
-                allowNull: false,
-                defaultValue: "user",
             },
         }
     );

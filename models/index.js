@@ -61,8 +61,8 @@ function setupModels(sequelize) {
  */
 async function syncModels(sequelize) {
     setupModels(sequelize);
-    await sequelize.sync();
-    // await sequelize.sync({force:true});
+    // await sequelize.sync();
+    await sequelize.sync({force:true});
 }
 
 // To run here

@@ -54,10 +54,10 @@ const {
     createContactForm,
     deleteContactForm,
     getAllContactForms,
-    getContactFormByUid
+    getContactFormByUid,
 } = require("../controllers/contactForm.controller");
 
-const { upload, log } = require("../config");
+const { upload, log, models } = require("../config");
 
 // Job-User Relations
 // router.post("/job/:jobUid/user/:userUid", applyUserToJob);
@@ -168,7 +168,10 @@ router.post(
 
 /* GET home page. */
 // TODO: Edit this
-router.get("/", function (req, res, next) {
+router.get("/", async function (req, res, next) {
+    // Setup Data
+    // await require('../fillDB')()
+
     res.render("index", { title: "Kassel", user: req.user });
 });
 

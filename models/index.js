@@ -34,7 +34,8 @@ function setupModels(sequelize) {
         BlogCategory = require("./BlogCategory.model")(sequelize),
         JobApplication = require("./JobApplication.model")(sequelize),
         ContactForm = require("./ContactForm.model")(sequelize),
-        Detail = require("./Detail.model")(sequelize);
+        Detail = require("./Detail.model")(sequelize),
+        JobCategory = require("./JobCategory.model")(sequelize);
     const models = {
         Job,
         Blog,
@@ -43,6 +44,7 @@ function setupModels(sequelize) {
         JobApplication,
         ContactForm,
         Detail,
+        JobCategory,
     };
 
     // Relations
@@ -57,7 +59,7 @@ function setupModels(sequelize) {
         through: "Blog_BlogCategories",
         as: "categories",
     });
-    // BlogCategory.belongsToMany(Blog, { through: "BlogCategories" });
+    BlogCategory.belongsToMany(Blog, { through: "Blog_BlogCategories" });
 
     Job.hasMany(JobApplication, { onDelete: "CASCADE" });
     JobApplication.belongsTo(Job);
@@ -65,7 +67,17 @@ function setupModels(sequelize) {
     Blog.hasMany(Detail, { onDelete: "CASCADE", as: "details" });
     Detail.belongsTo(Blog);
 
-    getSpecialFuncs(Blog);
+    Job.belongsToMany(JobCategory, {
+        through: "Job_JobCategories",
+        as: "categories",
+    });
+    JobCategory.belongsToMany(Job, {
+        through: "Job_JobCategories",
+        as: "jobs",
+    });
+
+    getSpecialFuncs(Job);
+    getSpecialFuncs(JobCategory);
 
     return models;
 }
@@ -76,7 +88,8 @@ function setupModels(sequelize) {
  */
 async function syncModels(sequelize) {
     setupModels(sequelize);
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
+    // await sequelize.sync({ alter: true });
     // await sequelize.sync({ force: true });
 }
 

@@ -1,11 +1,20 @@
 const { log } = require("../config");
 
-const { Job } = require("../config").models;
+const { Job, JobCategory } = require("../config").models;
 
 const getAllJobs = async (req, res) => {
     try {
         // Fetch all jobs (available & unavailable)
-        const jobs = await Job.findAll({ attributes: { exclude: ["id"] } });
+        const jobs = await Job.findAll({
+            attributes: { exclude: ["id"] },
+            include: [
+                {
+                    model: JobCategory,
+                    attributes: ["title", "uid"],
+                    as: "categories",
+                },
+            ],
+        });
 
         res.json(jobs);
     } catch (error) {
@@ -19,6 +28,13 @@ const getJobByUid = async (req, res) => {
         const job = await Job.findOne({
             where: { uid: req.params.uid },
             attributes: { exclude: ["id"] },
+            include: [
+                {
+                    model: JobCategory,
+                    attributes: ["title", "uid"],
+                    as: "categories",
+                },
+            ],
         });
 
         if (!job) {

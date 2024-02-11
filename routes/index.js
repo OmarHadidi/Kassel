@@ -50,6 +50,13 @@ const {
     getJobApplicationsForJob,
 } = require("../controllers/relations.controller");
 
+const {
+    createContactForm,
+    deleteContactForm,
+    getAllContactForms,
+    getContactFormByUid
+} = require("../controllers/contactForm.controller");
+
 const { upload, log } = require("../config");
 
 // Job-User Relations
@@ -135,6 +142,12 @@ router.get("/categories", getAllCategories);
 router.post("/categories", mw.auth.isAuthenticated(), createCategory);
 router.put("/categories/:uid", mw.auth.isAuthenticated(), updateCategory);
 router.delete("/categories/:uid", mw.auth.isAuthenticated(), deleteCategory);
+
+// Contact Us Routes
+router.post("/contact-forms", createContactForm);
+router.delete("/contact-forms/:uid", deleteContactForm);
+router.get("/contact-forms", getAllContactForms);
+router.get("/contact-forms/:uid", getContactFormByUid);
 
 // User Routes
 router.get("/users", mw.auth.isAuthenticated(), getAllUsers);

@@ -32,13 +32,15 @@ function setupModels(sequelize) {
         User = require("./user.model")(sequelize),
         Blog = require("./Blog.model")(sequelize),
         BlogCategory = require("./BlogCategory.model")(sequelize),
-        JobApplication = require("./JobApplication.model")(sequelize);
+        JobApplication = require("./JobApplication.model")(sequelize),
+        ContactForm = require("./ContactForm.model")(sequelize);
     const models = {
         Job,
         Blog,
         BlogCategory,
         User,
         JobApplication,
+        ContactForm,
     };
 
     // Relations
@@ -49,10 +51,13 @@ function setupModels(sequelize) {
     Blog.belongsTo(User, { foreignKey: "author_id", as: "author" });
     User.hasMany(Blog, { foreignKey: "author_id", as: "authoredBlogs" });
 
-    Blog.belongsToMany(BlogCategory, { through: "Blog_Categories", as: "categories" });
+    Blog.belongsToMany(BlogCategory, {
+        through: "Blog_Categories",
+        as: "categories",
+    });
     // BlogCategory.belongsToMany(Blog, { through: "BlogCategories" });
 
-    Job.hasMany(JobApplication, { onDelete: 'CASCADE' });
+    Job.hasMany(JobApplication, { onDelete: "CASCADE" });
     JobApplication.belongsTo(Job);
 
     getSpecialFuncs(Job);
@@ -66,7 +71,7 @@ function setupModels(sequelize) {
  */
 async function syncModels(sequelize) {
     setupModels(sequelize);
-    await sequelize.sync({alter:true});
+    await sequelize.sync({ alter: true });
     // await sequelize.sync({ force: true });
 }
 

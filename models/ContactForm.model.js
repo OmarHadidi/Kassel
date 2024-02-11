@@ -2,7 +2,7 @@ const { Sequelize, DataTypes, Op } = require("sequelize");
 const errors = require("../config/errors");
 
 module.exports = function (sequelize) {
-    return sequelize.define("Contact", {
+    return sequelize.define("ContactForm", {
         uid: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

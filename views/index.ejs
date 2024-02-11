@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <% if (user) { %>
-      <p>Welcome to <%= title %>, <%= user.username %></p>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>
+    <%= title %>
+  </h1>
+  <% if (user) { %>
+    <p>Welcome to <%= title %>, <%= user.username %>
+    </p>
     <% } else { %>
       <p>Welcome to <%= title %>. You are not Logged in</p>
-    <% } %>
+      <% } %>
 
-<!-- Test -->
-<form action="/blogs" method="post" enctype="multipart/form-data">
+        <!-- Test -->
+        <!-- <form action="/blogs" method="post" enctype="multipart/form-data">
   <label for="title">Title:</label><br>
   <input type="text" id="title" name="title"><br><br>
 
@@ -26,14 +33,47 @@
   <label for="fileToUpload">Select File:</label><br>
   <input type="file" name="image" id="image"><br><br>
   <input type="submit" value="Upload File" name="submit">
-</form>
-<!-- 
+</form> -->
+        <form id="contact-career-form" style="opacity: 1; transform: none;" enctype="multipart/form-data"
+          action="http://localhost:3000/jobs/cbf8dc69-3f64-4176-b6f0-6762830f560a/applications" method="post">
+          <div class="grid grid-cols-1 gap-4">
+            <div class="mb-4 aos-init aos-animate gap-8 grid grid-cols-1 lg:grid-cols-2 justify-between w-full"
+              style="opacity: 1; transform: none;"><input
+                class="name py-3 outline-none px-3 pr-2 border-[2px] border-[#eee]" id="fname" placeholder="firstName"
+                type="text" value="" name="firstName" style="opacity: 1; transform: none;"><input
+                class="name py-3 outline-none px-3 pr-2 border-[2px] border-[#eee]" id="lname" placeholder="lastName"
+                type="text" value="" name="lastName" style="opacity: 1; transform: none;"></div>
+            <div class="mb-4 aos-init aos-animate" style="opacity: 1; transform: none;"><input
+                class="email w-full py-3 outline-none px-3 pr-2 border-[2px] border-[#eee]" id="email"
+                placeholder="Your Email" type="email" value="" name="email"></div>
+            <div class="mb-4 aos-init aos-animate" style="opacity: 1; transform: none;"><input
+                class="phone w-full py-3 outline-none px-3 pr-2 border-[2px] border-[#eee]" id="phone"
+                placeholder="Your Phone" type="tel" value="" name="phone"></div>
+            <div class="mb-4 aos-init aos-animate" style="opacity: 1; transform: none;"><input
+                class="here w-full py-3 outline-none px-3 pr-2 border-[2px] border-[#eee]" id="about"
+                placeholder="How did you hear about us ?" type="text" value="" name="hearAbout"></div>
+            <div class="mb-4 aos-init aos-animate" style="opacity: 1; transform: none;"><textarea
+                class="massage w-full py-3 outline-none px-3 pr-2 border-[2px] border-[#eee] h-[200px]" name="message"
+                id="message" placeholder="Your Message"></textarea></div>
+            <div class="mb-4 aos-init aos-animate" style="opacity: 1; transform: none;">
+              <div class="mb-3"><label for="formFileLg"
+                  class="mb-2 inline-block text-neutral-700 dark:text-neutral-200">Attach any files you think could be
+                  useful (optional)</label><input
+                  class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] font-normal leading-[2.15] text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                  id="formFile" type="file" name="resume"></div>
+            </div>
+            <div class="my-btn mt-8" style="opacity: 1; transform: none;"><button
+                class="btn btn-contact uppercase font-bold rounded-full transition duration-300 transform hover:scale-105 text-[20px]"
+                type="submit" name="submit">SUBMIT</button></div>
+          </div>
+        </form>
+        <!-- 
   <form action="/upload" method="post" enctype="multipart/form-data">
     <input type="file" name="image">
     <button type="submit">Upload</button>
   </form>
  -->
- <!-- <form id="contactform" action="https://formsubmit.io/send/omarhadidi20062006@gmail.com" method="POST">
+        <!-- <form id="contactform" action="https://formsubmit.io/send/omarhadidi20062006@gmail.com" method="POST">
   <input name="_redirect" type="hidden" id="name" value="http://localhost:3000/">
   <input name="name" type="text" placeholder="name" id="name" required>
   <input name="email" type="email" placeholder="email" id="email" required>
@@ -44,5 +84,6 @@
   <input value="Submit" type="submit">
 </form> -->
 
-  </body>
+</body>
+
 </html>

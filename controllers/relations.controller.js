@@ -1,6 +1,6 @@
 const { log } = require("../config");
 
-const { User, Job, Blog, BlogCategory } = require("../config").models;
+const { User, Job, Blog, BlogCategory, JobApplication } = require("../config").models;
 
 const applyUserToJob = async (req, res) => {
     try {
@@ -130,8 +130,10 @@ const createJobApplicationForJob = async (req, res) => {
             req.body;
         // Construct the file link using the uploaded file path
         const resumeLink = req.file ? `/uploads/${req.file.filename}` : null;
+        log.dump("resumeLink", resumeLink)
         // Find the Job based on the uid passed in the URL parameter
         const jobUid = req.params.jobUid; // Assuming jobUid is the parameter for the Job's uid
+        log.dump("jobUid", jobUid)
         const job = await Job.findOne({ where: { uid: jobUid } });
         // Create the job application
         const jobApplication = await JobApplication.create({

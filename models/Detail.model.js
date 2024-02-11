@@ -2,12 +2,7 @@ const { Sequelize, DataTypes, Op } = require("sequelize");
 const errors = require("../config/errors");
 
 module.exports = function (sequelize) {
-    return sequelize.define("Blog", {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-        },
+    return sequelize.define("Detail", {
         uid: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -18,18 +13,19 @@ module.exports = function (sequelize) {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                notEmpty: { msg: errors.Missing("blog title") },
+                notEmpty: { msg: errors.Missing("title") },
             },
         },
         description: {
             type: DataTypes.TEXT,
             allowNull: false,
             validate: {
-                notEmpty: { msg: errors.Missing("blog description") },
+                notEmpty: { msg: errors.Missing("description") },
             },
         },
         image: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING, // Assuming image is stored as a URL or file path
+            allowNull: true, // Image is optional, so it can be null
         },
     });
 };

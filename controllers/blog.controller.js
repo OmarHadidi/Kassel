@@ -1,5 +1,5 @@
 const { log } = require("../config");
-const { Blog, User, BlogCategory } = require("../config").models;
+const { Blog, User, BlogCategory, Detail } = require("../config").models;
 const path = require("path");
 const fs = require("fs");
 
@@ -16,6 +16,11 @@ const getAllBlogs = async (req, res) => {
                     through: {
                         attributes: [],
                     },
+                },
+                {
+                    model: Detail,
+                    attributes: { exclude: ["id", "BlogId"] },
+                    as: "details",
                 },
             ],
             order: [["updatedAt", "DESC"]],
@@ -39,6 +44,11 @@ const getBlogByUid = async (req, res) => {
                     model: BlogCategory,
                     attributes: ["title", "uid"],
                     as: "categories",
+                },
+                {
+                    model: Detail,
+                    attributes: { exclude: ["id", "BlogId"] },
+                    as: "details",
                 },
             ],
         });

@@ -33,7 +33,8 @@ function setupModels(sequelize) {
         Blog = require("./Blog.model")(sequelize),
         BlogCategory = require("./BlogCategory.model")(sequelize),
         JobApplication = require("./JobApplication.model")(sequelize),
-        ContactForm = require("./ContactForm.model")(sequelize);
+        ContactForm = require("./ContactForm.model")(sequelize),
+        Detail = require("./Detail.model")(sequelize);
     const models = {
         Job,
         Blog,
@@ -41,6 +42,7 @@ function setupModels(sequelize) {
         User,
         JobApplication,
         ContactForm,
+        Detail,
     };
 
     // Relations
@@ -60,7 +62,10 @@ function setupModels(sequelize) {
     Job.hasMany(JobApplication, { onDelete: "CASCADE" });
     JobApplication.belongsTo(Job);
 
-    getSpecialFuncs(Job);
+    Blog.hasMany(Detail, { onDelete: "CASCADE", as: "details" });
+    Detail.belongsTo(Blog);
+
+    getSpecialFuncs(Blog);
 
     return models;
 }

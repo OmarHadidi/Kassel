@@ -52,7 +52,7 @@ function setupModels(sequelize) {
     User.hasMany(Blog, { foreignKey: "author_id", as: "authoredBlogs" });
 
     Blog.belongsToMany(BlogCategory, {
-        through: "Blog_Categories",
+        through: "Blog_BlogCategories",
         as: "categories",
     });
     // BlogCategory.belongsToMany(Blog, { through: "BlogCategories" });

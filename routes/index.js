@@ -110,6 +110,7 @@ router.post(
     upload.single("resume"),
     createJobApplicationForJob
 );
+
 router.get(
     "/jobs/:jobUid/applications",
     mw.auth.isAuthenticated(),
@@ -125,6 +126,7 @@ router.post(
     upload.single("image"),
     createBlog
 );
+
 router.put("/blogs/:uid", mw.auth.isAuthenticated(), updateBlog);
 router.delete("/blogs/:uid", mw.auth.isAuthenticated(), deleteBlog);
 

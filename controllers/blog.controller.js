@@ -57,7 +57,7 @@ const createBlog = async (req, res) => {
     try {
         const { title, details, categories, description } = req.body;
 
-        const imageUrl = "/uploads/" + req.file.filename;
+        const imageUrl = req.file ? "/uploads/" + req.file.filename : null;
 
         const blog = await Blog.create({
             title,

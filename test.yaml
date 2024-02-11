@@ -1,0 +1,305 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: kassel API Documentation
+basePath: https://kassel-2.onrender.com
+schemes:
+  - https
+paths:
+  /blogs:
+    get:
+      summary: Retrieve all blogs
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BlogResponse'
+    post:
+      summary: Create a new blog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BlogRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BlogResponse'
+  /blogs/{uid}:
+    get:
+      summary: Retrieve a specific blog by its UID
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BlogResponse'
+    put:
+      summary: Update a blog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BlogRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BlogResponse'
+    delete:
+      summary: Delete a blog
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+  /jobs:
+    get:
+      summary: Retrieve all jobs
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JobResponse'
+    post:
+      summary: Create a new job
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/JobRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/JobResponse'
+  /jobs/{uid}:
+    get:
+      summary: Retrieve a specific job by its UID
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/JobResponse'
+    put:
+      summary: Update a job
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/JobRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/JobResponse'
+    delete:
+      summary: Delete a job
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+  /job-applications:
+    get:
+      summary: Retrieve all job applications
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/JobApplicationResponse'
+  /job-applications/{uid}:
+    get:
+      summary: Retrieve a specific job application by its UID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/JobApplicationResponse'
+    delete:
+      summary: Delete a job application by its UID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+
+definitions:
+  JobRequest:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+    required:
+      - title
+      - description
+
+  JobResponse:
+    type: object
+    properties:
+      uid:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+
+  JobApplicationRequest:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+        format: email
+      phone:
+        type: string
+      hearAbout:
+        type: string
+      message:
+        type: string
+    required:
+      - firstName
+      - lastName
+      - email
+
+  JobApplicationResponse:
+    type: object
+    properties:
+      uid:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+        format: email
+      phone:
+        type: string
+      hearAbout:
+        type: string
+      message:
+        type: string
+      resume:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+
+  BlogRequest:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      details:
+        type: string
+      image:
+        type: string
+    required:
+      - title
+      - description
+      - details
+      - image
+
+  BlogResponse:
+    type: object
+    properties:
+      uid:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      details:
+        type: string
+      image:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      author:
+        type: object
+        properties:
+          username:
+            type: string
+          uid:
+            type: string

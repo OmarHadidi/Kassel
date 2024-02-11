@@ -1,336 +1,453 @@
 swagger: "2.0"
 info:
-  version: "1.0.0"
-  title: "Job and Blog API"
+    version: "1.0.0"
+    title: "Job and Blog API"
 servers:
-  - url: "https://kassel-2.onrender.com"
+    - url: "https://kassel-2.onrender.com"
 paths:
-  /blogs:
-    get:
-      summary: "Get all blogs"
-      responses:
-        200:
-          description: "List of blogs"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Blog"
-    post:
-      summary: "Create a new blog"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "body"
-          in: "body"
-          description: "Blog object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/definitions/Blog"
-      responses:
-        200:
-          description: "Blog created successfully"
-        400:
-          description: "Invalid input"
-  /blogs/{uid}:
-    get:
-      summary: "Get a blog by its ID"
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the blog to return"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Blog details"
-          schema:
-            $ref: "#/definitions/Blog"
-        404:
-          description: "Blog not found"
-    put:
-      summary: "Update a blog"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the blog to update"
-          required: true
-          type: "string"
-        - name: "body"
-          in: "body"
-          description: "Updated blog object"
-          required: true
-          schema:
-            $ref: "#/definitions/Blog"
-      responses:
-        200:
-          description: "Blog updated successfully"
-        400:
-          description: "Invalid input"
-        404:
-          description: "Blog not found"
-    delete:
-      summary: "Delete a blog"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the blog to delete"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Blog deleted successfully"
-        404:
-          description: "Blog not found"
-  /jobs:
-    get:
-      summary: "Get all jobs"
-      responses:
-        200:
-          description: "List of jobs"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Job"
-    post:
-      summary: "Create a new job"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "body"
-          in: "body"
-          description: "Job object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/definitions/Job"
-      responses:
-        200:
-          description: "Job created successfully"
-        400:
-          description: "Invalid input"
-  /jobs/{uid}:
-    get:
-      summary: "Get a job by its ID"
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the job to return"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Job details"
-          schema:
-            $ref: "#/definitions/Job"
-        404:
-          description: "Job not found"
-    put:
-      summary: "Update a job"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the job to update"
-          required: true
-          type: "string"
-        - name: "body"
-          in: "body"
-          description: "Updated job object"
-          required: true
-          schema:
-            $ref: "#/definitions/Job"
-      responses:
-        200:
-          description: "Job updated successfully"
-        400:
-          description: "Invalid input"
-        404:
-          description: "Job not found"
-    delete:
-      summary: "Delete a job"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the job to delete"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Job deleted successfully"
-        404:
-          description: "Job not found"
-  /job-applications:
-    get:
-      summary: "Get all job applications"
-      security:
-        - bearerAuth: []
-      responses:
-        200:
-          description: "List of job applications"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/JobApplication"
-  /job-applications/{uid}:
-    get:
-      summary: "Get a job application by its ID"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the job application to return"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Job application details"
-          schema:
-            $ref: "#/definitions/JobApplication"
-        404:
-          description: "Job application not found"
-    delete:
-      summary: "Delete a job application"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the job application to delete"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Job application deleted successfully"
-        404:
-          description: "Job application not found"
-  /categories:
-    get:
-      summary: "Get all categories"
-      responses:
-        200:
-          description: "List of categories"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Category"
-    post:
-      summary: "Create a new category"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "body"
-          in: "body"
-          description: "Category object that needs to be added"
-          required: true
-          schema:
-            $ref: "#/definitions/Category"
-      responses:
-        200:
-          description: "Category created successfully"
-        400:
-          description: "Invalid input"
-  /categories/{uid}:
-    get:
-      summary: "Get a category by its ID"
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the category to return"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Category details"
-          schema:
-            $ref: "#/definitions/Category"
-        404:
-          description: "Category not found"
-    put:
-      summary: "Update a category"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the category to update"
-          required: true
-          type: "string"
-        - name: "body"
-          in: "body"
-          description: "Updated category object"
-          required: true
-          schema:
-            $ref: "#/definitions/Category"
-      responses:
-        200:
-          description: "Category updated successfully"
-        400:
-          description: "Invalid input"
-        404:
-          description: "Category not found"
-    delete:
-      summary: "Delete a category"
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: "uid"
-          in: "path"
-          description: "ID of the category to delete"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Category deleted successfully"
-        404:
-          description: "Category not found"
+    /blogs:
+        get:
+            summary: "Get all blogs"
+            responses:
+                200:
+                    description: "List of blogs"
+                    schema:
+                        type: "array"
+                        items:
+                            type: "object"
+                            properties:
+                                uid:
+                                    type: "string"
+                                    description: "Unique identifier for the blog"
+                                title:
+                                    type: "string"
+                                    description: "Title of the blog"
+                                description:
+                                    type: "string"
+                                    description: "Description of the blog"
+                                details:
+                                    type: "string"
+                                    description: "Details of the blog"
+                                image:
+                                    type: "string"
+                                    description: "Image URL of the blog"
+                                createdAt:
+                                    type: "string"
+                                    format: "date-time"
+                                    description: "Timestamp indicating when the blog was created"
+                                updatedAt:
+                                    type: "string"
+                                    format: "date-time"
+                                    description: "Timestamp indicating when the blog was last updated"
+        post:
+            summary: "Create a new blog"
+            consumes:
+                - "multipart/form-data"
+            parameters:
+                - name: "title"
+                  in: "formData"
+                  type: "string"
+                  description: "Title of the blog"
+                  required: true
+                - name: "description"
+                  in: "formData"
+                  type: "string"
+                  description: "Description of the blog"
+                  required: true
+                - name: "details"
+                  in: "formData"
+                  type: "string"
+                  description: "Details of the blog"
+                - name: "image"
+                  in: "formData"
+                  type: "file"
+                  description: "Image file for the blog"
+            responses:
+                200:
+                    description: "Blog created successfully"
+                400:
+                    description: "Invalid input"
+    /blogs/{uid}:
+        get:
+            summary: "Get a blog by its ID"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the blog to return"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Blog details"
+                    schema:
+                        $ref: "#/definitions/Blog"
+                404:
+                    description: "Blog not found"
+        put:
+            summary: "Update a blog"
+            consumes:
+                - "multipart/form-data"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the blog to update"
+                  required: true
+                  type: "string"
+                - name: "title"
+                  in: "formData"
+                  type: "string"
+                  description: "Title of the blog"
+                  required: true
+                - name: "description"
+                  in: "formData"
+                  type: "string"
+                  description: "Description of the blog"
+                  required: true
+                - name: "details"
+                  in: "formData"
+                  type: "string"
+                  description: "Details of the blog"
+                - name: "image"
+                  in: "formData"
+                  type: "file"
+                  description: "Image file for the blog"
+            responses:
+                200:
+                    description: "Blog updated successfully"
+                400:
+                    description: "Invalid input"
+                404:
+                    description: "Blog not found"
+        delete:
+            summary: "Delete a blog"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the blog to delete"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Blog deleted successfully"
+                404:
+                    description: "Blog not found"
+    /jobs:
+        get:
+            summary: "Get all jobs"
+            responses:
+                200:
+                    description: "List of jobs"
+                    schema:
+                        type: "array"
+                        items:
+                            type: "object"
+                            properties:
+                                uid:
+                                    type: "string"
+                                    description: "Unique identifier for the job"
+                                title:
+                                    type: "string"
+                                    description: "Title of the job"
+                                description:
+                                    type: "string"
+                                    description: "Description of the job"
+                                createdAt:
+                                    type: "string"
+                                    format: "date-time"
+                                    description: "Timestamp indicating when the job was created"
+                                updatedAt:
+                                    type: "string"
+                                    format: "date-time"
+                                    description: "Timestamp indicating when the job was last updated"
+        post:
+            summary: "Create a new job"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  description: "Job object that needs to be added"
+                  required: true
+                  schema:
+                      $ref: "#/definitions/Job"
+            responses:
+                200:
+                    description: "Job created successfully"
+                400:
+                    description: "Invalid input"
+    /jobs/{uid}:
+        get:
+            summary: "Get a job by its ID"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the job to return"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Job details"
+                    schema:
+                        $ref: "#/definitions/Job"
+                404:
+                    description: "Job not found"
+        put:
+            summary: "Update a job"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the job to update"
+                  required: true
+                  type: "string"
+                - name: "body"
+                  in: "body"
+                  description: "Updated job object"
+                  required: true
+                  schema:
+                      $ref: "#/definitions/Job"
+            responses:
+                200:
+                    description: "Job updated successfully"
+                400:
+                    description: "Invalid input"
+                404:
+                    description: "Job not found"
+        delete:
+            summary: "Delete a job"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the job to delete"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Job deleted successfully"
+                404:
+                    description: "Job not found"
+    /categories:
+        get:
+            summary: "Get all categories"
+            responses:
+                200:
+                    description: "List of categories"
+                    schema:
+                        type: "array"
+                        items:
+                            type: "object"
+                            properties:
+                                uid:
+                                    type: "string"
+                                    description: "Unique identifier for the category"
+                                title:
+                                    type: "string"
+                                    description: "Title of the category"
+        post:
+            summary: "Create a new category"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  description: "Category object that needs to be added"
+                  required: true
+                  schema:
+                      $ref: "#/definitions/Category"
+            responses:
+                200:
+                    description: "Category created successfully"
+                400:
+                    description: "Invalid input"
+    /categories/{uid}:
+        get:
+            summary: "Get a category by its ID"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the category to return"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Category details"
+                    schema:
+                        $ref: "#/definitions/Category"
+                404:
+                    description: "Category not found"
+        put:
+            summary: "Update a category"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the category to update"
+                  required: true
+                  type: "string"
+                - name: "body"
+                  in: "body"
+                  description: "Updated category object"
+                  required: true
+                  schema:
+                      $ref: "#/definitions/Category"
+            responses:
+                200:
+                    description: "Category updated successfully"
+                400:
+                    description: "Invalid input"
+                404:
+                    description: "Category not found"
+        delete:
+            summary: "Delete a category"
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the category to delete"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Category deleted successfully"
+                404:
+                    description: "Category not found"
+    /job-applications:
+        get:
+            summary: "Get all job applications"
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: "List of job applications"
+                    schema:
+                        type: "array"
+                        items:
+                            $ref: "#/definitions/JobApplication"
+    /job-applications/{uid}:
+        get:
+            summary: "Get a job application by its ID"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the job application to return"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Job application details"
+                    schema:
+                        $ref: "#/definitions/JobApplication"
+                404:
+                    description: "Job application not found"
+        delete:
+            summary: "Delete a job application"
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: "uid"
+                  in: "path"
+                  description: "ID of the job application to delete"
+                  required: true
+                  type: "string"
+            responses:
+                200:
+                    description: "Job application deleted successfully"
+                404:
+                    description: "Job application not found"
 definitions:
-  Blog:
-    type: "object"
-    properties:
-      uid:
-        type: "string"
-        description: "Unique identifier for the blog"
-      title:
-        type: "string"
-        description: "Title of the blog"
-      content:
-        type: "string"
-        description: "Content of the blog"
-      author:
-        type: "string"
-        description: "Author of the blog"
-  Job:
-    type: "object"
-    properties:
-      uid:
-        type: "string"
-        description: "Unique identifier for the job"
-      title:
-        type: "string"
-        description: "Title of the job"
-      description:
-        type: "string"
-        description: "Description of the job"
-      location:
-        type: "string"
-        description: "Location of the job"
-  JobApplication:
-    type: "object"
-    properties:
-      uid:
-        type: "string"
-        description: "Unique identifier for the job application"
-      // Define other properties of Job Application
-  Category:
-    type: "object"
-    properties:
-      uid:
-        type: "string"
-        description: "Unique identifier for the category"
+    Blog:
+        type: "object"
+        properties:
+            uid:
+                type: "string"
+                description: "Unique identifier for the blog"
+            title:
+                type: "string"
+                description: "Title of the blog"
+            description:
+                type: "string"
+                description: "Description of the blog"
+            details:
+                type: "string"
+                description: "Details of the blog"
+            image:
+                type: "string"
+                description: "Image URL of the blog"
+            createdAt:
+                type: "string"
+                format: "date-time"
+                description: "Timestamp indicating when the blog was created"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+                description: "Timestamp indicating when the blog was last updated"
+    Job:
+        type: "object"
+        properties:
+            uid:
+                type: "string"
+                description: "Unique identifier for the job"
+            title:
+                type: "string"
+                description: "Title of the job"
+            description:
+                type: "string"
+                description: "Description of the job"
+            createdAt:
+                type: "string"
+                format: "date-time"
+                description: "Timestamp indicating when the job was created"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+                description: "Timestamp indicating when the job was last updated"
+    JobApplication:
+        type: "object"
+        properties:
+            uid:
+                type: "string"
+                description: "Unique identifier for the job application"
+            firstName:
+                type: "string"
+                description: "First name of the applicant"
+            lastName:
+                type: "string"
+                description: "Last name of the applicant"
+            email:
+                type: "string"
+                format: "email"
+                description: "Email address of the applicant"
+            phone:
+                type: "string"
+                description: "Phone number of the applicant"
+            hearAbout:
+                type: "string"
+                description: "How the applicant heard about the job"
+            message:
+                type: "string"
+                description: "Message or cover letter from the applicant"
+            resume:
+                type: "string"
+                description: "Path or URL to the applicant's resume"
+            createdAt:
+                type: "string"
+                format: "date-time"
+                description: "Timestamp indicating when the application was created"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+                description: "Timestamp indicating when the application was last updated"
+            job:
+                type: "object"
+                description: "Details of the job applied for"
+                properties:
+                    uid:
+                        type: "string"
+                        description: "Unique identifier for the job"
+                    title:
+                        type: "string"
+                        description: "Title of the job"
+    Category:
+        type: "object"
+        properties:
+            uid:
+                type: "string"
+                description: "Unique identifier for the category"
+            title:
+                type: "string"
+                description: "Title of the category"
